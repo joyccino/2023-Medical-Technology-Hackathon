@@ -1,14 +1,54 @@
-// Copyright (c) 2019 ml5
-//
-// This software is released under the MIT License.
-// https://opensource.org/licenses/MIT
+var db = new Pouch('todos');
+var remoteCouch = false;
+var cookie;
 
-/* ===
-Adapted from:
-ml5 Example
-PoseNet example using p5.js
-Available at https://ml5js.org
-=== */
+function addTodo(text) {
+	var todo = {
+		title: text,
+		completed: false
+	};
+	db.post(todo, function(err, result) {
+		if (!err) {
+		console.log('Successfully posted a todo!');
+		}
+	});
+}
+
+function sync() {
+	console.log('syncing');
+	var remote = new PouchDB(remoteCouch, {headers: {'Cookie': cookie}});
+	var pushRep = db.replicate.to(remote, {
+		continuous: true,
+		complete: syncError
+	});
+	var pullRep = db.replicate.from(remote, {
+		continuous: true,
+		complete: syncError
+	});
+}
+
+// EDITING STARTS HERE (you dont need to edit anything below this line)
+
+// There was some form or error syncing
+function syncError() {
+	console.log('sync error');
+}
+
+
+db.allDocs({include_docs: true}, function(err, doc) {
+	doc.rows.forEach(
+		function(doc){
+			doc._deleted = true;
+			return db.remove(doc);
+		}
+	);
+	console.log(doc);
+});
+
+db.allDocs({include_docs: true}, function(err, doc) {
+	console.log(doc);
+});
+
 let type;
 let video;
 let handPose;
