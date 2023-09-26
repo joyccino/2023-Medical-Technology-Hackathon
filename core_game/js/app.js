@@ -39,7 +39,7 @@ db.allDocs({include_docs: true}, function(err, doc) {
 	doc.rows.forEach(
 		function(doc){
 			doc._deleted = true;
-			return db.remove(doc);
+			return db.remgiove(doc);
 		}
 	);
 	console.log(doc);
