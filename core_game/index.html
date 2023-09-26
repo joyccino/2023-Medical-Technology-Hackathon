@@ -13,6 +13,7 @@
         margin: 0;
         padding: 0;
         overflow: hidden;
+        position: relative;
     }
 
     video {
@@ -22,14 +23,26 @@
         width: 100%;
         height: 100%;
     }
+
+    #webcam {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: calc(1/3 * 100%); /* 화면의 1/3 크기로 설정 */
+        height: calc(1/3 * 100%); /* 화면의 1/3 크기로 설정 */
+    }
+
+    #login_canvas {
+        width: 100%;
+        height: 100%;
+    }
 </style>
 
 <body class="bg-gray-100 text-gray-800">
     <video controls="controls">
         <source src="../resources/demosvid.mp4" type="video/mp4" />
     </video>
-    <div class="flex justify-center flex-wrap items-start mt-10">
-        
+    <div id="webcam" class="flex justify-center flex-wrap items-start mt-10">
         <div id="load-app-save" class="bg-gray-300 rounded-t-md rounded-b-md shadow-2xl mb-12">
             <div id="status" class=" text-center font-semibold text-gray-700 py-2 px-5">
                 <!-- this will get replaced with hand gesture prompts -->
@@ -41,5 +54,23 @@
     </div>
 
 </body>
+<script>
+    window.addEventListener('DOMContentLoaded', (event) => {
+        const webcamDiv = document.getElementById('webcam');
+        const loginCanvas = document.getElementById('login_canvas');
+
+        // 캔버스 크기를 조정합니다.
+        function resizeCanvas() {
+            const width = webcamDiv.clientWidth;
+            const height = webcamDiv.clientHeight;
+            loginCanvas.width = width;
+            loginCanvas.height = height;
+        }
+
+        // 페이지 로드 시와 창 크기 변경 시 캔버스 크기를 업데이트합니다.
+        window.addEventListener('load', resizeCanvas);
+        window.addEventListener('resize', resizeCanvas);
+    });
+</script>
 
 </html>
