@@ -1,12 +1,15 @@
 <html>
 <head>
-  <meta charset="UTF-8">
-  <title>SquatCam</title>
-  <link rel="stylesheet" type="text/css" href="style.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/p5.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/addons/p5.dom.min.js"></script>
-  <script src="https://unpkg.com/ml5@latest/dist/ml5.min.js"></script>
-  <script src="app.js"></script>
+    <meta charset="UTF-8">
+    <title>SquatCam</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/p5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/addons/p5.dom.min.js"></script>
+    <script src="https://unpkg.com/ml5@latest/dist/ml5.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/pouchdb@8.0.1/dist/pouchdb.min.js"></script>
+    <script src="js/pouchdb-nightly.js"></script>
+    <script src="js/base.js"></script>
+    <script src="js/app.js"></script>
 </head>
 
 <body class="bg-gray-100 text-gray-800">
@@ -15,10 +18,6 @@
             <div id="status" class=" text-center font-semibold text-gray-700 py-2 px-5">
                 <!-- this will get replaced with hand gesture prompts -->
                 <span>Loading...</span>
-            </div>
-            <div id="login_canvas" class="flex justify-center mx-3">
-                <!-- camera will go here -->
-        
             </div>
             <div class="text-center text-gray-700 py-5 px-5">
                 <div id="saveButtonContainer" class="inline-block"></div>
@@ -38,6 +37,11 @@
                 </tr>
             </table>
         </div>
+    </div>
+
+    <div id="login_canvas" class="flex justify-center mx-3">
+        <!-- camera will go here -->
+
     </div>
 
 </body>
