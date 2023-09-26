@@ -28,8 +28,8 @@
         position: absolute;
         bottom: 0;
         right: 0;
-        width: calc(1/3 * 100%); /* 화면의 1/3 크기로 설정 */
-        height: calc(1/3 * 100%); /* 화면의 1/3 크기로 설정 */
+        width: calc(2/5 * 100%); /* 화면의 1/3 크기로 설정 */
+        height: calc(2/5 * 100%); /* 화면의 1/3 크기로 설정 */
     }
 
     #login_canvas {
@@ -60,10 +60,10 @@
 
         // 캔버스 크기를 조정합니다.
         function resizeCanvas() {
-            const width = webcamDiv.clientWidth * 1.1;
-            const height = webcamDiv.clientHeight * 1.3;
+            let width = webcamDiv.clientWidth;
+            let height = webcamDiv.clientHeight;
             loginCanvas.width = width;
-            loginCanvas.height = height;
+            loginCanvas.height = height * 1.5;
         }
 
         // 페이지 로드 시와 창 크기 변경 시 캔버스 크기를 업데이트합니다.
