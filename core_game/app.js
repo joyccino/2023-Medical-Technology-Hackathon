@@ -12,6 +12,7 @@ Available at https://ml5js.org
 let type;
 let video;
 let handPose;
+let predictions = [];
 
 
 function setup() {
@@ -35,7 +36,7 @@ function setup() {
 
 	
 	handPose.on('hand', function(results) {
-		poses = results;
+		predictions = results;
 	});
 
 	// Hide the video element, and just show the canvas
@@ -58,18 +59,9 @@ function draw() {
 	clear();
 	image(video, 0, 0, width, height);
 
-	fill('white');
-	strokeWeight(0);
-	stroke('#A0AEC0');
-	rectMode(CENTER);
-	rect(45, 24, 60, 25, 15);
-
-	fill('#4A5568');
-	noStroke();
-	textSize(30);
-	textAlign(CENTER, CENTER);
-	textStyle(BOLD);
-	textFont('sans-serif');
+	if (predictions.length > 0) {
+		drawKeypoints();
+	}
 }
 
 function drawEllipse(leftx, lefty, rightx, righty,squatPos) {
@@ -89,21 +81,13 @@ function drawEllipse(leftx, lefty, rightx, righty,squatPos) {
 
 // A function to draw ellipses over the detected keypoints
 function drawKeypoints() {
-	// Loop through all the poses detected
-	for (let i = 0; i < poses.length; i++) {
-		// For each pose detected, loop through all the keypoints
-		let pose = poses[i].pose;
-		for (let j = 0; j < pose.keypoints.length; j++) {
-			// A keypoint is an object describing a body part (like rightArm or leftShoulder)
-			let keypoint = pose.keypoints[j];
-			// Only draw an ellipse is the pose probability is bigger than 0.2
-			if (keypoint.score > 0.5) {
-				push();
-				fill('rgba(255,255,255, 0.5)');
-				noStroke();
-				ellipse(keypoint.position.x, keypoint.position.y, 10, 10);
-				pop();
-			}
+	for (let i = 0; i < predictions.length; i += 1) {
+		const prediction = predictions[i];
+		for (let j = 0; j < prediction.landmarks.length; j += 1) {
+		const keypoint = prediction.landmarks[j];
+		fill(0, 255, 0);
+		noStroke();
+		ellipse(keypoint[0], keypoint[1], 10, 10);
 		}
 	}
 }
