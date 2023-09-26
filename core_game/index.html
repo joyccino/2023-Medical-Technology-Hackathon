@@ -2,7 +2,6 @@
 <head>
   <meta charset="UTF-8">
   <title>SquatCam</title>
-  <link rel="stylesheet" type="text/css" href="style.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/p5.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/addons/p5.dom.min.js"></script>
   <script src="https://unpkg.com/ml5@latest/dist/ml5.min.js"></script>
@@ -10,8 +9,13 @@
 </head>
 
 <body class="bg-gray-100 text-gray-800">
+    <div>
+        
+    </div>
     <div class="flex justify-center flex-wrap items-start mt-10">
-        <div id="load-app-save" class="bg-gray-300 rounded-t-md rounded-b-md shadow-2xl mb-12" style="min-width: 680px;">
+        <video width="500px" height="500px" controls="controls">
+        <source src="resources/demosvid.mp4" type="video/mp4" />
+        <div id="load-app-save" class="bg-gray-300 rounded-t-md rounded-b-md shadow-2xl mb-12">
             <div id="status" class=" text-center font-semibold text-gray-700 py-2 px-5">
                 <!-- this will get replaced with hand gesture prompts -->
                 <span>Loading...</span>
