@@ -605,6 +605,10 @@ video {
   width: 100%;
 }
 
+.user_selected {
+  background: orange;
+}
+
 @media (min-width: 640px) {
   .container {
     max-width: 640px;

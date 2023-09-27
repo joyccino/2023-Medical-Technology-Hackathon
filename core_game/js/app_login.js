@@ -47,9 +47,13 @@ function removeAll(db){
 }
 
 let currently_selected = -1;
+let last_selected = -1;
+let user_count;
 function redrawUserTables(){
 	var table = document.getElementById("user_data");
 	table.innerHTML = "<thead><tr><th>Username</th><th>Average Score</th><th>Total Playtime</th></tr></thead><tbody></tbody>";
+	table = document.getElementById('user_data').getElementsByTagName('tbody')[0];
+	user_count = 0;
 	db.allDocs({include_docs: true}, function(err, doc) {
 		doc.rows.forEach(
 			function(doc2){
@@ -61,9 +65,31 @@ function redrawUserTables(){
 				name.innerHTML = doc2.name;
 				score.innerHTML = String(doc2.score);
 				playTime.innerHTML = String(doc2.playTime);
+				user_count += 1;
 			}
 		);
+		if (user_count != 0){
+			currently_selected = 0;
+			last_selected = 0;
+			highlightSelected();
+		} else {
+			currently_selected = -1;
+			last_selected = -1;
+		}
 	});
+}
+
+function highlightSelected(){
+	var table = document.getElementById('user_data').getElementsByTagName('tbody')[0];
+	//dehighlight previous
+	if (last_selected != -1){
+		table.rows[last_selected].className = "";
+	}
+	//highlight current
+	if (currently_selected != -1){
+		table.rows[currently_selected].className = "user_selected";
+	}
+	last_selected = currently_selected;
 }
 
 let type;
@@ -124,20 +150,6 @@ function draw() {
 	}
 }
 
-function drawEllipse(leftx, lefty, rightx, righty,squatPos) {
-	noFill();
-	if (squatPos == 0) {
-		strokeWeight(2)
-		stroke('red');
-	}else if (squatPos == 1) {
-		strokeWeight(8);
-		stroke('cyan')
-	}
-	xpoint = (leftx + rightx) / 2
-	ypoint = (lefty + righty) / 2
-	diameter = Math.sqrt(Math.pow(rightx-leftx, 2) + Math.pow(righty-lefty, 2));
-	ellipse(xpoint, ypoint-(diameter*1.2), diameter*0.75, diameter*0.2);
- }
 
 // A function to draw ellipses over the detected keypoints
 function drawKeypoints() {
@@ -150,29 +162,4 @@ function drawKeypoints() {
 		ellipse(keypoint[0], keypoint[1], 10, 10);
 		}
 	}
-}
-
-// A function to draw the skeletons
-function drawSkeleton(squatPos, backPos, upPos, kneePos) {
-	// Loop through all the skeletons detected
-	for (let i = 0; i < poses.length; i++) {
-		let skeleton = poses[i].skeleton;
-		// stroke('rgb(0,255,0)'); //to green
-		// For every skeleton, loop through all body connections
-		for (let j = 0; j < skeleton.length; j++) {
-			let partA = skeleton[j][0];
-			let partB = skeleton[j][1];
-			push();
-			if (squatPos > 0) {
-				stroke('green');
-				strokeWeight(6);
-			}else {
-				stroke('red')
-				strokeWeight(1);
-			}
-			line(partA.position.x, partA.position.y, partB.position.x, partB.position.y);
-			pop();
-		}
-	}
-	
 }
