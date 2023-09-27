@@ -180,7 +180,6 @@ window.onload = function(){
 	});
 	camera.start();
 
-
 	//draw table
 	redrawUserTables();
 
