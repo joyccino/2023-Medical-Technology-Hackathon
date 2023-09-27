@@ -110,6 +110,9 @@ let canvasElement;
 let canvasCtx;
 let hands;
 let camera;
+let upCount = 0;
+let downCount = 0;
+let okCount = 0;
 
 let action = 0, count = 0;
 
@@ -127,30 +130,50 @@ function onResults(results) {
 	}
 	let res = -1;
 
-	let upCount = 0;
-	let downCount = 0;
-	let okCount = 0;
+	
 
 	if (results.multiHandLandmarks.length > 0) {
 		let gesture = gestureAnalysisOneHand(results.multiHandLandmarks[0]);
 
-		// progressbar
-		var elem = document.getElementById("myBar");
-		var width = 1;
+		function move(width) {
+			const elem = document.getElementById("myBar");
+			elem.style.width = width + "%";
+		}
 
 		if (gesture == 0) {
-			okCount += 1;
+			okCount++;
 			upCount = 0;
 			downCount = 0;
+			if(okCount > 100) {
+				okCount = 0;
+				// redirect to the game screen now.
+				window.location.href = "https://www.example.com";
+
+			}
+			move(Math.round((okCount / 100) * 100));
 		}
 		else if (gesture == 1) {
-			upCount += 1;
+			upCount++;
 			okCount = 0;
 			downCount = 0;
+			if (upCount > 50) {
+				upCount = 0;
+			}
+			move(Math.round((upCount / 50) * 100));
+
 		}
 		else if (gesture == 2) {
-			downCount += 1;
+			downCount ++;
 			okCount = 0;
+			upCount = 0;
+			if(downCount > 50) {
+				downCount = 0;
+			}
+			move(Math.round((downCount / 50) * 100));
+		}
+		else {
+			okCount = 0;
+			upCount = 0;
 			downCount = 0;
 		}
 	  };
