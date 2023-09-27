@@ -9,10 +9,9 @@ let STANDARD_GESTURES = {
 	thumb_down: [true, false, false, false, false]
 };
 
-function gestureAnalysisOneHand(results){
+function gestureAnalysis(results){
 	// ok sign?
 	let arr = getBentStraight(results);
-	console.log(arr);
 	if (compareToGesture(arr, STANDARD_GESTURES.ok)){
 		console.log("ok detected");
 		return 0;

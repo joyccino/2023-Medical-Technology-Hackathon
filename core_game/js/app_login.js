@@ -55,8 +55,8 @@ function redrawUserTables(){
 				var score = row.insertCell();
 				var playTime = row.insertCell();
 				name.innerHTML = doc2.name;
-				score.innerHTML = String(doc2.score);
-				playTime.innerHTML = String(doc2.playTime);
+				score.innerHTML = Number.parseFloat(doc2.score).toFixed(2);
+				playTime.innerHTML = Number.parseFloat(doc2.playTime).toFixed(2);
 				user_count += 1;
 			}
 		);
@@ -127,8 +127,8 @@ function onResults(results) {
 	}
 	let res = -1;
 	if (results.multiHandLandmarks.length > 0) {
-    gestureAnalysis(results.multiHandLandmarks[0]);
-	  };
+    	res = gestureAnalysis(results.multiHandLandmarks[0]);
+	};
 	canvasCtx.restore();
 	//count the things
 	if (res != action){
