@@ -126,8 +126,33 @@ function onResults(results) {
 		}
 	}
 	let res = -1;
+
+	let upCount = 0;
+	let downCount = 0;
+	let okCount = 0;
+
 	if (results.multiHandLandmarks.length > 0) {
-    gestureAnalysis(results.multiHandLandmarks[0]);
+		let gesture = gestureAnalysisOneHand(results.multiHandLandmarks[0]);
+
+		// progressbar
+		var elem = document.getElementById("myBar");
+		var width = 1;
+
+		if (gesture == 0) {
+			okCount += 1;
+			upCount = 0;
+			downCount = 0;
+		}
+		else if (gesture == 1) {
+			upCount += 1;
+			okCount = 0;
+			downCount = 0;
+		}
+		else if (gesture == 2) {
+			downCount += 1;
+			okCount = 0;
+			downCount = 0;
+		}
 	  };
 	canvasCtx.restore();
 	//count the things
@@ -160,6 +185,7 @@ function onResults(results) {
 				}
 				redrawUserTables();
 				break;
+
 		}
 	}
 }
