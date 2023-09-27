@@ -44,11 +44,8 @@ function removeAll(db){
 	db.allDocs({include_docs: true}, function(err, doc) {
 		doc.rows.forEach(
 			function(doc){
-				//remember this!
+				doc = doc.doc;
 				doc._deleted = true;
-				doc._id = doc.id;
-				doc._rev = doc.value.rev;
-				console.log(doc);
 				db.put(doc);
 			}
 		);
@@ -113,6 +110,22 @@ function newUserKeyPressHandler( event ) {
 	if (event.keyCode === 13) { //enter key
 		if (newUserDom.value != ""){
 			addUser(newUserDom.value, 0, 0);
+		} else {
+			/*
+			db.allDocs({include_docs: true}, function(err, doc) {
+				doc.rows.forEach(
+					function(doc){
+						//remember this!
+						doc = doc.doc;
+						console.log(doc);
+						doc.playTime += 1;
+						doc.score += 1;
+						return db.put(doc);
+					}
+				);
+			});
+			*/
+			alert("username cannot be empty");
 		}
 
 		redrawUserTables();
