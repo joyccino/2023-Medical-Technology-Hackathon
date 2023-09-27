@@ -1,10 +1,14 @@
+var db = new Pouch('todos');
+var remoteCouch = false;
+var cookie;
+
 let user_results = [];
 
 const videoElementOfUser = document.getElementsByClassName('input_video')[0];
 const videoElementOfDemo = document.getElementsByClassName('demo_video')[0];
 const canvasElement = document.getElementsByClassName('output_canvas')[0];
 const canvasCtx = canvasElement.getContext('2d');
-    
+
 function onResults(results) {
   canvasCtx.save();
   canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
@@ -32,7 +36,19 @@ hands.setOptions({
 });
 hands.onResults(onResults);
 
-const camera = new Camera(videoElementOfUser, {
+async function onFrame() {
+  if (!videoElementOfDemo.paused && !videoElementOfDemo.ended) {
+    await hands.send({
+      image: videoElementOfDemo
+    });
+  // https://stackoverflow.com/questions/65144038/how-to-use-requestanimationframe-with-promise    
+    await new Promise(requestAnimationFrame);
+    onFrame();
+  } else
+    setTimeout(onFrame, 500);
+}
+
+camera = new Camera(videoElementOfUser, {
   onFrame: async () => {
     await hands.send({image: videoElementOfUser});
   },
@@ -56,7 +72,6 @@ function calculateAngle(a, b, c) {
   return angle;
 }
 
-
 function postureAnalysis(results){
   if (results.multiHandLandmarks.length == 2) {
     let firstlandmarks = results.multiHandLandmarks[0];
@@ -76,4 +91,3 @@ function postureAnalysis(results){
 
   };
 };
-
