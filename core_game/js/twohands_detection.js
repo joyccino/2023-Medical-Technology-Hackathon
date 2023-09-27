@@ -17,6 +17,7 @@ function onResults(results) {
       drawLandmarks(canvasCtx, landmarks, {color: '#FF0000', lineWidth: 2});
     }
   }
+  postureAnalysis(results);
   canvasCtx.restore();
 }
 
@@ -39,3 +40,9 @@ const camera = new Camera(videoElementOfUser, {
   height: 720
 });
 camera.start();
+
+function postureAnalysis(results){
+  if (results.multiHandLandmarks.length > 0) {
+    console.log(results.multiHandLandmarks.length);
+  };
+};
