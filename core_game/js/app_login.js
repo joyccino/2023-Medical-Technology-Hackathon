@@ -140,7 +140,7 @@ let hands;
 let camera;
 function onResults(results) {
 	canvasCtx.save();
-	canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
+	canvasCtx.clearRect(0, 0, canvasElement.width/5, canvasElement.height/5);
 	canvasCtx.drawImage(
 		results.image, 0, 0, canvasElement.width, canvasElement.height);
 	if (results.multiHandLandmarks) {
@@ -189,10 +189,6 @@ window.onload = function(){
 }
 
 
-function modelReady() {
-	select('#status').style('color', '#4A5568');
-	select('#status').html('Ready!✔ <i class="fas fa-check-circle" style="color:#4A5568;"></i>');
-}
 function draw() {
 	
 	clear();
