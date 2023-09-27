@@ -2,11 +2,11 @@ var db = new Pouch('todos');
 var remoteCouch = false;
 var cookie;
 
-function addTodo(text) {
+function addUser(text, score, playTime) {
 	var todo = {
 		name: text,
-    	score: 30,
-    	playTime: 100
+    	score: score,
+    	playTime: playTime
 	};
 	db.post(todo, function(err, result) {
 		if (!err) {
@@ -69,8 +69,10 @@ function redrawUserTables(){
 			}
 		);
 		if (user_count != 0){
-			currently_selected = 0;
-			last_selected = 0;
+			if (currently_selected == -1 || currently_selected >= user_count){
+				currently_selected = 0;
+				last_selected = 0;
+			}
 			highlightSelected();
 		} else {
 			currently_selected = -1;
@@ -97,6 +99,15 @@ let video;
 let handPose;
 let predictions = [];
 
+
+var newUserDom;
+function newUserKeyPressHandler( event ) {
+	if (event.keyCode === 13) { //enter key
+		addUser(newUserDom.value, 0, 0);
+		redrawUserTables();
+		newUserDom.value = '';
+	}
+}
 
 function setup() {
 	console.log("inside setup");
@@ -130,6 +141,10 @@ function setup() {
 
 	//draw table
 	redrawUserTables();
+
+	//adding new user
+	newUserDom = document.getElementById('new_user');
+	newUserDom.addEventListener('keypress', newUserKeyPressHandler, false);
 }
 
 function saveImage() {
