@@ -7,12 +7,12 @@
   <script src="https://unpkg.com/ml5@latest/dist/ml5.min.js"></script>
   <script src="js/app_index.js"></script>
 </head>
-
 <style>
     body {
         margin: 0;
         padding: 0;
         overflow: hidden;
+        position: relative;
     }
 
     video {
@@ -22,14 +22,45 @@
         width: 100%;
         height: 100%;
     }
+
+    #webcam {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 40%;
+        height: 50%;
+    }
+
+    #login_canvas {
+        width: 100%;
+        height: 100%;
+    }
+
+    #scoreboard {
+        position: absolute;
+        top: 0;
+        right: 0;
+        background-color: rgba(255, 255, 255, 0.8);
+        padding: 10px;
+        border: 2px solid white; /* Add a white border around the scoreboard */
+        
+    }
+    #board {
+        font-size: 40px; /* Increase font size */
+        font-weight: bold; /* Make the text bold */
+    }
+    #score {
+        font-size: 100px; /* Increase font size */
+        font-weight: bold; /* Make the text bold */
+    }
 </style>
 
 <body class="bg-gray-100 text-gray-800">
     <video controls="controls">
         <source src="../resources/demosvid.mp4" type="video/mp4" />
     </video>
-    <div class="flex justify-center flex-wrap items-start mt-10">
-        
+    <div id = "scoreboard"><span id="board">SCORE:</span> <span id="score">80%</span></div>
+    <div id="webcam" class="flex justify-center flex-wrap items-start mt-10">
         <div id="load-app-save" class="bg-gray-300 rounded-t-md rounded-b-md shadow-2xl mb-12">
             <div id="status" class=" text-center font-semibold text-gray-700 py-2 px-5">
                 <!-- this will get replaced with hand gesture prompts -->
@@ -39,7 +70,22 @@
             </div>
         </div>
     </div>
-
 </body>
+<script>
+    window.addEventListener('DOMContentLoaded', (event) => {
+        const webcamDiv = document.getElementById('webcam');
+        const loginCanvas = document.getElementById('login_canvas');
+
+        function resizeCanvas() {
+            let width = webcamDiv.clientWidth;
+            let height = webcamDiv.clientHeight;
+            loginCanvas.width = width;
+            loginCanvas.height = height;
+        }
+
+        window.addEventListener('load', resizeCanvas);
+        window.addEventListener('resize', resizeCanvas);
+    });
+</script>
 
 </html>
