@@ -38,14 +38,9 @@ function syncError() {
 db.allDocs({include_docs: true}, function(err, doc) {
 	doc.rows.forEach(
 		function(doc){
-			doc._deleted = true;
-			return db.remgiove(doc);
+			return db.remove(doc);
 		}
 	);
-	console.log(doc);
-});
-
-db.allDocs({include_docs: true}, function(err, doc) {
 	console.log(doc);
 });
 
