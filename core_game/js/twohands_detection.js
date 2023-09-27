@@ -9,7 +9,16 @@ const videoElementOfDemo = document.getElementsByClassName('demo_video')[0];
 const canvasElement = document.getElementsByClassName('output_canvas')[0];
 const canvasCtx = canvasElement.getContext('2d');
 
+let started = false, startTime = -1;
+
 function onResults(results) {
+  if (!started){
+    started = true;
+    document.getElementById("status_button").innerHTML = "started!";
+    startTime = Date.now();
+    videoElementOfDemo.play();
+  }
+
   canvasCtx.save();
   canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
   canvasCtx.drawImage(
@@ -36,18 +45,6 @@ hands.setOptions({
 });
 hands.onResults(onResults);
 
-async function onFrame() {
-  if (!videoElementOfDemo.paused && !videoElementOfDemo.ended) {
-    await hands.send({
-      image: videoElementOfDemo
-    });
-  // https://stackoverflow.com/questions/65144038/how-to-use-requestanimationframe-with-promise    
-    await new Promise(requestAnimationFrame);
-    onFrame();
-  } else
-    setTimeout(onFrame, 500);
-}
-
 camera = new Camera(videoElementOfUser, {
   onFrame: async () => {
     await hands.send({image: videoElementOfUser});
@@ -56,6 +53,7 @@ camera = new Camera(videoElementOfUser, {
   height: 720
 });
 camera.start();
+
 
 function calculateAngle(a, b, c) {
   a = [a["x"], a["y"]]; // First
