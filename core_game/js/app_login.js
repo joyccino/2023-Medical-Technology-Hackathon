@@ -134,7 +134,7 @@ function onResults(results) {
 
 	if (results.multiHandLandmarks.length > 0) {
 
-		let gesture = gestureAnalysisOneHand(results.multiHandLandmarks[0]);
+		let gesture = gestureAnalysis(results.multiHandLandmarks[0]);
 
 		function move(width) {
 			const elem = document.getElementById("myBar");
@@ -145,32 +145,32 @@ function onResults(results) {
 			okCount++;
 			upCount = 0;
 			downCount = 0;
-			if(okCount > 100) {
+			if(okCount > 50) {
 				okCount = 0;
 				// redirect to the game screen now.
-				window.location.href = "https://www.example.com";
+				window.location.href = "index.html";
 
 			}
-			move(Math.round((okCount / 100) * 100));
+			move(Math.round((okCount / 50) * 100));
 		}
 		else if (gesture == 1) {
 			upCount++;
 			okCount = 0;
 			downCount = 0;
-			if (upCount > 50) {
+			if (upCount > 20) {
 				upCount = 0;
 			}
-			move(Math.round((upCount / 50) * 100));
+			move(Math.round((upCount / 20) * 100));
 
 		}
 		else if (gesture == 2) {
 			downCount ++;
 			okCount = 0;
 			upCount = 0;
-			if(downCount > 50) {
+			if(downCount > 20) {
 				downCount = 0;
 			}
-			move(Math.round((downCount / 50) * 100));
+			move(Math.round((downCount / 20) * 100));
 		}
 		else {
 			okCount = 0;
