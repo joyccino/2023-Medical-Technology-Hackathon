@@ -3,31 +3,72 @@ let thumbUpValidation = 0;
 let thumbDownValidation = 0;
 let okValidation = 0;
 
+let STANDARD_GESTURES = {
+	ok: [true, false, true, true, true],
+	thumb_up: [true, false, false, false, false],
+	thumb_down: [true, false, false, false, false]
+};
+
 function gestureAnalysis(results){
 	// ok sign?
-	if(thumbStraight(results.multiHandLandmarks[0]) && !indexStraight(results.multiHandLandmarks[0]) && middleStraight(results.multiHandLandmarks[0]) && ringFingerStraight(results.multiHandLandmarks[0]) && pinkyStraight(results.multiHandLandmarks[0])) {
+	let arr = getBentStraight(results);
+	console.log(arr);
+	if (compareToGesture(arr, STANDARD_GESTURES.ok)){
 		console.log("ok detected");
 		thumbUpValidation = 0;
 		thumbDownValidation = 0;
 		okValidation++;
 		return;
 	}
-	let wristY = results.multiHandLandmarks[0][0].y;
-	let thumbTipY = results.multiHandLandmarks[0][4].y;
 
-	if(thumbStraight(results.multiHandLandmarks[0]) && wristY > thumbTipY) {
+	function detectThumb(arr, landmark){
+		let wristY = landmark[0].y;
+		let thumbTipY = landmark[4].y;
+		return wristY > thumbTipY;
+	}
+
+	if (compareToGesture(arr, STANDARD_GESTURES.thumb_up, detectThumb, results)){
 		// a thumb up?
 		console.log("thumb up");
+		thumbUpValidation = 0;
+		okValidation = 0;
 		thumbUpValidation++;
 		return;
 	}
 
-	else if (thumbStraight(results.multiHandLandmarks[0]) && thumbTipY > wristY) {
-		// a thumb down?
+	function detectThumb2(arr, landmark){
+		let wristY = landmark[0].y;
+		let thumbTipY = landmark[4].y;
+		return wristY < thumbTipY;
+	}
+
+	if (compareToGesture(arr, STANDARD_GESTURES.thumb_down, detectThumb2, results)){
+		// a thumb up?
 		console.log("thumb down");
+		thumbDownValidation = 0;
+		okValidation = 0;
 		thumbDownValidation++;
 		return;
 	}
+}
+
+function getBentStraight(landmarks){
+	return [
+		thumbStraight(landmarks),
+		indexStraight(landmarks),
+		middleStraight(landmarks),
+		ringFingerStraight(landmarks),
+		pinkyStraight(landmarks),
+	]
+}
+
+function compareToGesture(arr, gesture, callback=(arr, landmark) => {return true;}, landmark=null){
+	for (var i = 0; i < 5; i++){
+		if (arr[i] != gesture[i]){
+			return false;
+		}
+	}
+	return callback(arr, landmark);
 }
 
 function angleFunction(a, b, c) {
@@ -35,7 +76,6 @@ function angleFunction(a, b, c) {
 	if (angle > 200) {
 		angle = 360 - angle;
 	}
-	console.log("angle: "+angle);
 	return angle;
 }
 
