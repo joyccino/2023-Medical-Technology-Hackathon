@@ -41,8 +41,39 @@ const camera = new Camera(videoElementOfUser, {
 });
 camera.start();
 
+function calculateAngle(a, b, c) {
+  a = [a["x"], a["y"]]; // First
+  b = [b["x"], b["y"]]; // Mid
+  c = [c["x"], c["y"]]; // End
+
+  const radians = Math.atan2(c[1] - b[1], c[0] - b[0]) - Math.atan2(a[1] - b[1], a[0] - b[0]);
+  let angle = Math.abs((radians * 180.0) / Math.PI);
+
+  if (angle > 180.0) {
+      angle = 360 - angle;
+  }
+
+  return angle;
+}
+
+
 function postureAnalysis(results){
-  if (results.multiHandLandmarks.length > 0) {
-    console.log(results.multiHandLandmarks.length);
+  if (results.multiHandLandmarks.length == 2) {
+    let firstlandmarks = results.multiHandLandmarks[0];
+    let seclandmarks = results.multiHandLandmarks[1];
+  
+    // thumb (432), index(765), middle(11109), ring(151413), pinky(191817) 
+    const thumb1 = calculateAngle(firstlandmarks[4], firstlandmarks[3], firstlandmarks[2]);
+    const thumb2 = calculateAngle(seclandmarks[4], seclandmarks[3], seclandmarks[2]);
+    const index1 = calculateAngle(firstlandmarks[7], firstlandmarks[6], firstlandmarks[5]);
+    const index2 = calculateAngle(seclandmarks[7], seclandmarks[6], seclandmarks[5]);
+    const middle1 = calculateAngle(firstlandmarks[11], firstlandmarks[10], firstlandmarks[9]);
+    const middle2 = calculateAngle(seclandmarks[11], seclandmarks[10], seclandmarks[9]);
+    const ring1 = calculateAngle(firstlandmarks[15], firstlandmarks[14], firstlandmarks[13]);
+    const ring2 = calculateAngle(seclandmarks[15], seclandmarks[14], seclandmarks[13]);
+    const pinky1 = calculateAngle(firstlandmarks[19], firstlandmarks[18], firstlandmarks[17]);
+    const pinky2 = calculateAngle(seclandmarks[19], seclandmarks[18], seclandmarks[17]);
+
   };
 };
+
