@@ -160,6 +160,8 @@ function onResults(results) {
 				}
 				redrawUserTables();
 				break;
+
+			}
 		}
 	}
 }
