@@ -14,7 +14,6 @@ let video;
 let handPose;
 let predictions = [];
 
-
 function setup() {
 	console.log("inside setup");
 	let canvas = createCanvas(640, 480);

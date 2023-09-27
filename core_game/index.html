@@ -1,91 +1,64 @@
+<!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <title>SquatCam</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/p5.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/addons/p5.dom.min.js"></script>
-  <script src="https://unpkg.com/ml5@latest/dist/ml5.min.js"></script>
-  <script src="js/app_index.js"></script>
+  <meta charset="utf-8">
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
 </head>
 <style>
     body {
-        margin: 0;
-        padding: 0;
-        overflow: hidden;
-        position: relative;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      justify-content: stretch;
+      height: 100vh;
     }
 
-    video {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-    }
-
-    #webcam {
-        position: absolute;
-        bottom: 0;
-        right: 0;
-        width: 40%;
-        height: 50%;
-    }
-
-    #login_canvas {
-        width: 100%;
-        height: 100%;
+    #demo_video {
+      width: 100%;
+      height: 100%;
     }
 
     #scoreboard {
-        position: absolute;
-        top: 0;
-        right: 0;
-        background-color: rgba(255, 255, 255, 0.8);
-        padding: 10px;
-        border: 2px solid white; /* Add a white border around the scoreboard */
-        
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: white;
+      padding: 10px;
+      border: 2px solid black;
+      width: 15%;
+      height: 15%;
     }
-    #board {
-        font-size: 40px; /* Increase font size */
-        font-weight: bold; /* Make the text bold */
+
+    #scoreboard span {
+        font-size: 55px;
     }
-    #score {
-        font-size: 100px; /* Increase font size */
-        font-weight: bold; /* Make the text bold */
+
+    .output_canvas {
+      transform: scaleX(-1);
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      width: 40%;
+      height: 45%;
+    }
+    
+    .input_video {
+      transform: scaleX(-1);
+      display: none;
     }
 </style>
-
-<body class="bg-gray-100 text-gray-800">
-    <video controls="controls">
+<body>
+    <video id = "demo_video" controls="controls" autoplay="true" muted="muted">
         <source src="../resources/demosvid.mp4" type="video/mp4" />
     </video>
-    <div id = "scoreboard"><span id="board">SCORE:</span> <span id="score">80%</span></div>
-    <div id="webcam" class="flex justify-center flex-wrap items-start mt-10">
-        <div id="load-app-save" class="bg-gray-300 rounded-t-md rounded-b-md shadow-2xl mb-12">
-            <div id="status" class=" text-center font-semibold text-gray-700 py-2 px-5">
-                <!-- this will get replaced with hand gesture prompts -->
-                <span>Loading...</span>
-            </div>
-            <div id="login_canvas" class="flex justify-center mx-3">
-            </div>
-        </div>
-    </div>
+    <div id = "scoreboard"><span id="board">SCORE:</span> <span id="score">0%</span></div>
+    <video class="input_video" style="display: none"></video>
+    <canvas class="output_canvas" width="1280px" height="720px"></canvas>
 </body>
-<script>
-    window.addEventListener('DOMContentLoaded', (event) => {
-        const webcamDiv = document.getElementById('webcam');
-        const loginCanvas = document.getElementById('login_canvas');
-
-        function resizeCanvas() {
-            let width = webcamDiv.clientWidth;
-            let height = webcamDiv.clientHeight;
-            loginCanvas.width = width;
-            loginCanvas.height = height;
-        }
-
-        window.addEventListener('load', resizeCanvas);
-        window.addEventListener('resize', resizeCanvas);
-    });
-</script>
-
+<script src="js/twohands_detection.js"></script>
 </html>
