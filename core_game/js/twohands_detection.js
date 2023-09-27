@@ -33,9 +33,9 @@ hands.setOptions({
 hands.onResults(onResults);
 
 
-const camera = new Camera(videoElementOfDemo, {
+const camera = new Camera(videoElementOfUser, {
   onFrame: async () => {
-    await hands.send({image: videoElementOfDemo});
+    await hands.send({image: videoElementOfUser});
   },
   width: 1280,
   height: 720
