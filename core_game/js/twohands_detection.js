@@ -1,3 +1,7 @@
+var db = new Pouch('todos');
+var remoteCouch = false;
+var cookie;
+
 let user_results = [];
 
 const videoElementOfUser = document.getElementsByClassName('input_video')[0];
@@ -43,14 +47,6 @@ async function onFrame() {
   } else
     setTimeout(onFrame, 500);
 }
-/*
-videoElementOfDemo.src = "../resources/demosvid.mp4";
-//videoElementOfDemo.src = "https://github.com/joyccino/2023-Medical-Technology-Hackathon/blob/main/resources/demosvid.mp4";
-videoElementOfDemo.onloadeddata = (evt) => {
-  videoElementOfDemo.play();
-  onFrame();
-}
-*/
 
 camera = new Camera(videoElementOfUser, {
   onFrame: async () => {
