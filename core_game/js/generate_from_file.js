@@ -21,7 +21,7 @@ function onResults(results) {
   if (user_results.length == 0){
     startTime = Date.now();
   }
-  results.image = null;
+  delete results.image;
   results.time = Date.now() - startTime;
   user_results.push(results);
   postureAnalysis(results);
