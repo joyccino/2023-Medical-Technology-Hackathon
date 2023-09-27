@@ -164,10 +164,10 @@ window.onload = function(){
 		return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`;
 	}});
 	hands.setOptions({
-		maxNumHands: 2,
+		maxNumHands: 1,
 		modelComplexity: 1,
-		minDetectionConfidence: 0.5,
-		minTrackingConfidence: 0.5
+		minDetectionConfidence: 0.9,
+		minTrackingConfidence: 0.9
 	});
 	hands.onResults(onResults);
 	
