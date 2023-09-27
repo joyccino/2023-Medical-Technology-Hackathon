@@ -1,4 +1,7 @@
-const videoElement = document.getElementsByClassName('input_video')[0];
+let user_results = [];
+
+const videoElementOfUser = document.getElementsByClassName('input_video')[0];
+const videoElementOfDemo = document.getElementsByClassName('demo_video')[0];
 const canvasElement = document.getElementsByClassName('output_canvas')[0];
 const canvasCtx = canvasElement.getContext('2d');
 
@@ -28,9 +31,9 @@ hands.setOptions({
 });
 hands.onResults(onResults);
 
-const camera = new Camera(videoElement, {
+const camera = new Camera(videoElementOfUser, {
   onFrame: async () => {
-    await hands.send({image: videoElement});
+    await hands.send({image: videoElementOfUser});
   },
   width: 1280,
   height: 720
