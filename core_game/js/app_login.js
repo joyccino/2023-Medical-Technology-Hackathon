@@ -55,8 +55,8 @@ function redrawUserTables(){
 				var score = row.insertCell();
 				var playTime = row.insertCell();
 				name.innerHTML = doc2.name;
-				score.innerHTML = String(doc2.score);
-				playTime.innerHTML = String(doc2.playTime);
+				score.innerHTML = Number.parseFloat(doc2.score).toFixed(2);
+				playTime.innerHTML = Number.parseFloat(doc2.playTime).toFixed(2);
 				user_count += 1;
 			}
 		);
@@ -132,28 +132,8 @@ function onResults(results) {
 	let okCount = 0;
 
 	if (results.multiHandLandmarks.length > 0) {
-		let gesture = gestureAnalysisOneHand(results.multiHandLandmarks[0]);
-
-		// progressbar
-		var elem = document.getElementById("myBar");
-		var width = 1;
-
-		if (gesture == 0) {
-			okCount += 1;
-			upCount = 0;
-			downCount = 0;
-		}
-		else if (gesture == 1) {
-			upCount += 1;
-			okCount = 0;
-			downCount = 0;
-		}
-		else if (gesture == 2) {
-			downCount += 1;
-			okCount = 0;
-			downCount = 0;
-		}
-	  };
+    	res = gestureAnalysis(results.multiHandLandmarks[0]);
+	};
 	canvasCtx.restore();
 	//count the things
 	if (res != action){

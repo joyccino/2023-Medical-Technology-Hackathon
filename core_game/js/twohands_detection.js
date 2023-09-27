@@ -9,8 +9,13 @@ const videoElementOfDemo = document.getElementsByClassName('demo_video')[0];
 const canvasElement = document.getElementsByClassName('output_canvas')[0];
 const canvasCtx = canvasElement.getContext('2d');
 
-let started = false, startTime = -1;
-let points = 0;
+let started = false, startTime = -1, done = false;
+
+//get data raw
+var frameData = JSON.parse(demostvid_data);
+var currentDataFrame = 0;
+var totalScore = 0;
+var count = 0;
 
 function onResults(results) {
   if (!started){
@@ -21,7 +26,6 @@ function onResults(results) {
     videoElementOfDemo.addEventListener('ended', finaliseLevel, false);
     videoElementOfDemo.play();
   }
-
   canvasCtx.save();
   canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
   canvasCtx.drawImage(
@@ -33,8 +37,42 @@ function onResults(results) {
       drawLandmarks(canvasCtx, landmarks, {color: '#FF0000', lineWidth: 2});
     }
   }
-  postureAnalysis(results);
   canvasCtx.restore();
+  
+  if(!done){
+    //get closest frame to right now
+    var timeOffset = Date.now() - startTime;
+    //increment framecount if necessary
+    while (currentDataFrame < frameData.length - 1){
+      if (frameData[currentDataFrame + 1].time < timeOffset){
+        currentDataFrame += 1;
+      } else {
+        break;
+      }
+    }
+    //get postures of the current camera and the current dataFrame
+    var data = results.multiHandLandmarks;
+    var posCamera = {
+      left: data.length > 0 ? getBentStraight(data[0]) : [null, null, null, null, null],
+      right: data.length > 1 ? getBentStraight(data[1]) : [null, null, null, null, null],
+    }
+    data = frameData[currentDataFrame].multiHandLandmarks;
+    var posDataFrame = {
+      left: data.length > 0 ? getBentStraight(data[0]) : [null, null, null, null, null],
+      right: data.length > 1 ? getBentStraight(data[1]) : [null, null, null, null, null],
+    }
+    //calculate score
+    count += 1;
+    for (var i = 0; i < 5; i++){
+      if (posCamera.left[i] == posDataFrame.left[i]){
+        totalScore += 10;
+      }
+      if (posCamera.right[i] == posDataFrame.right[i]){
+        totalScore += 10;
+      }
+    }
+    document.getElementById("score").innerHTML = Number.parseFloat(totalScore / count).toFixed(2);
+  }
 }
 
 const hands = new Hands({locateFile: (file) => {
@@ -57,59 +95,31 @@ camera = new Camera(videoElementOfUser, {
 });
 camera.start();
 
-function finaliseLevel(){
-  //alert user
-  alert("you are done!");
+let username = window.location.search.split("=")[1];
+var user_doc;
+db.allDocs({include_docs: true, startkey: username, endkey: username}, function(err, doc) {
+	doc.rows.forEach(
+		function(doc){
+			user_doc = doc.doc;
+			console.log(user_doc);
+		}
+	);
+});
+
+async function finaliseLevel(){
   //update database
-  let username = window.location.search.split("=")[1];
-  console.log(username);
-  db.allDocs({include_docs: true, startkey: username, endkey: username}, function(err, doc) {
-    doc.rows.forEach(
-      function(doc){
-        doc = doc.doc;
-        console.log(doc);
-        doc.playTime += Math.min(Math.ceil((Date.now() - startTime) / (1000 * 60)), 1);
-        doc.score = Math.max(doc.score, points);
-        return db.put(doc);
-      }
-    );
-  });
+  done = true;
+  user_doc.playTime += (Date.now() - startTime) / (1000 * 60);
+  user_doc.score += totalScore / count;
+  console.log(user_doc);
+  db.put(user_doc);
+  //alert user
+  document.getElementById("board").innerHTML = "finished!";
+  function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+  await sleep(3000);
+
   //redirect
   window.location.replace("./login.html");
 }
-
-
-function calculateAngle(a, b, c) {
-  a = [a["x"], a["y"]]; // First
-  b = [b["x"], b["y"]]; // Mid
-  c = [c["x"], c["y"]]; // End
-
-  const radians = Math.atan2(c[1] - b[1], c[0] - b[0]) - Math.atan2(a[1] - b[1], a[0] - b[0]);
-  let angle = Math.abs((radians * 180.0) / Math.PI);
-
-  if (angle > 180.0) {
-      angle = 360 - angle;
-  }
-
-  return angle;
-}
-
-function postureAnalysis(results){
-  if (results.multiHandLandmarks.length == 2) {
-    let firstlandmarks = results.multiHandLandmarks[0];
-    let seclandmarks = results.multiHandLandmarks[1];
-  
-    // thumb (432), index(765), middle(11109), ring(151413), pinky(191817) 
-    const thumb1 = calculateAngle(firstlandmarks[4], firstlandmarks[3], firstlandmarks[2]);
-    const thumb2 = calculateAngle(seclandmarks[4], seclandmarks[3], seclandmarks[2]);
-    const index1 = calculateAngle(firstlandmarks[7], firstlandmarks[6], firstlandmarks[5]);
-    const index2 = calculateAngle(seclandmarks[7], seclandmarks[6], seclandmarks[5]);
-    const middle1 = calculateAngle(firstlandmarks[11], firstlandmarks[10], firstlandmarks[9]);
-    const middle2 = calculateAngle(seclandmarks[11], seclandmarks[10], seclandmarks[9]);
-    const ring1 = calculateAngle(firstlandmarks[15], firstlandmarks[14], firstlandmarks[13]);
-    const ring2 = calculateAngle(seclandmarks[15], seclandmarks[14], seclandmarks[13]);
-    const pinky1 = calculateAngle(firstlandmarks[19], firstlandmarks[18], firstlandmarks[17]);
-    const pinky2 = calculateAngle(seclandmarks[19], seclandmarks[18], seclandmarks[17]);
-
-  };
-};
