@@ -51,6 +51,16 @@ function removeAll(db){
 		);
 	});
 }
+/*
+db.allDocs({include_docs: true, startkey: "woah", endkey: "woah"}, function(err, doc) {
+	doc.rows.forEach(
+		function(doc){
+			doc = doc.doc;
+			console.log(doc);
+		}
+	);
+});
+*/
 
 let currently_selected = -1;
 let last_selected = -1;
