@@ -11,8 +11,8 @@ let STANDARD_GESTURES = {
 
 function gestureAnalysisOneHand(results){
 	// ok sign?
-	let arr = getBentStraight(results.multiHandLandmarks[0]);
-	//console.log(arr);
+	let arr = getBentStraight(results);
+	console.log(arr);
 	if (compareToGesture(arr, STANDARD_GESTURES.ok)){
 		console.log("ok detected");
 		return 0;
@@ -24,7 +24,7 @@ function gestureAnalysisOneHand(results){
 		return wristY > thumbTipY;
 	}
 
-	if (compareToGesture(arr, STANDARD_GESTURES.thumb_up, detectThumb, results.multiHandLandmarks[0])){
+	if (compareToGesture(arr, STANDARD_GESTURES.thumb_up, detectThumb, results)){
 		// a thumb up?
 		console.log("thumb up");
 		return 1;
@@ -36,7 +36,7 @@ function gestureAnalysisOneHand(results){
 		return wristY < thumbTipY;
 	}
 
-	if (compareToGesture(arr, STANDARD_GESTURES.thumb_down, detectThumb2, results.multiHandLandmarks[0])){
+	if (compareToGesture(arr, STANDARD_GESTURES.thumb_down, detectThumb2, results)){
 		// a thumb up?
 		console.log("thumb down");
 		return 2;

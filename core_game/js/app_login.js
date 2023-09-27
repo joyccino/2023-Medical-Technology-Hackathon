@@ -127,8 +127,8 @@ function onResults(results) {
 	}
 	let res = -1;
 	if (results.multiHandLandmarks.length > 0) {
-		res = gestureAnalysisOneHand(results);
-	};
+    gestureAnalysis(results.multiHandLandmarks[0]);
+	  };
 	canvasCtx.restore();
 	//count the things
 	if (res != action){
@@ -198,6 +198,15 @@ window.onload = function(){
 	newUserDom.addEventListener('keypress', newUserKeyPressHandler, false);
 }
 
+function draw() {
+	
+	clear();
+	image(video, 0, 0, width, height);
+
+	if (predictions.length > 0) {
+		drawKeypoints();
+	}
+}
 
 // A function to draw ellipses over the detected keypoints
 function drawKeypoints() {
