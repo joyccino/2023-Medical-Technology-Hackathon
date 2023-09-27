@@ -10,12 +10,15 @@ const canvasElement = document.getElementsByClassName('output_canvas')[0];
 const canvasCtx = canvasElement.getContext('2d');
 
 let started = false, startTime = -1;
+let points = 0;
 
 function onResults(results) {
   if (!started){
     started = true;
-    document.getElementById("status_button").innerHTML = "started!";
+    document.getElementById("board").innerHTML = "SCORE:";
+    document.getElementById("score").innerHTML = "0%";
     startTime = Date.now();
+    videoElementOfDemo.addEventListener('ended', finaliseLevel, false);
     videoElementOfDemo.play();
   }
 
@@ -53,6 +56,26 @@ camera = new Camera(videoElementOfUser, {
   height: 720
 });
 camera.start();
+
+function finaliseLevel(){
+  //alert user
+  alert("you are done!");
+  //update database
+  let username = window.location.search.split("=")[1];
+  console.log(username);
+  db.allDocs({include_docs: true, startkey: username, endkey: username}, function(err, doc) {
+    doc.rows.forEach(
+      function(doc){
+        doc = doc.doc;
+        console.log(doc);
+        doc.playTime += Math.ceil((Date.now() - startTime) / (1000 * 60));
+        doc.score = Math.max(doc.score, points);
+        return db.put(doc);
+      }
+    );
+  });
+  //redirect
+}
 
 
 function calculateAngle(a, b, c) {
