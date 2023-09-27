@@ -189,9 +189,6 @@ window.onload = function(){
 	newUserDom.addEventListener('keypress', newUserKeyPressHandler, false);
 }
 
-function saveImage() {
-	saveCanvas(canvas, 'snapshot', 'png');
-}
 
 function modelReady() {
 	select('#status').style('color', '#4A5568');
