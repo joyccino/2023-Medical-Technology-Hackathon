@@ -127,7 +127,7 @@ function onResults(results) {
 	}
 	let res = -1;
 	if (results.multiHandLandmarks.length > 0) {
-    gestureAnalysis(results.multiHandLandmarks[0]);
+		gestureAnalysisOneHand(results.multiHandLandmarks[0]);
 	  };
 	canvasCtx.restore();
 	//count the things
