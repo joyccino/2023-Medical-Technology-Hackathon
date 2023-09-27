@@ -150,6 +150,9 @@ function onResults(results) {
 			drawLandmarks(canvasCtx, landmarks, {color: '#FF0000', lineWidth: 2});
 		}
 	}
+	if (results.multiHandLandmarks.length > 0) {
+		gestureAnalysis(results);
+	  };
 	canvasCtx.restore();
 }
 
