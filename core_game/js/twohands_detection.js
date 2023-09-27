@@ -68,13 +68,14 @@ function finaliseLevel(){
       function(doc){
         doc = doc.doc;
         console.log(doc);
-        doc.playTime += Math.ceil((Date.now() - startTime) / (1000 * 60));
+        doc.playTime += Math.min(Math.ceil((Date.now() - startTime) / (1000 * 60)), 1);
         doc.score = Math.max(doc.score, points);
         return db.put(doc);
       }
     );
   });
   //redirect
+  window.location.replace("./login.html");
 }
 
 
