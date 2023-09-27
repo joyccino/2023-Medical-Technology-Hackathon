@@ -191,7 +191,6 @@ window.onload = function(){
 	newUserDom.addEventListener('keypress', newUserKeyPressHandler, false);
 }
 
-
 function draw() {
 	
 	clear();
@@ -201,7 +200,6 @@ function draw() {
 		drawKeypoints();
 	}
 }
-
 
 // A function to draw ellipses over the detected keypoints
 function drawKeypoints() {
