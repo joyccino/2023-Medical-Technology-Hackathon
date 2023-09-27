@@ -161,7 +161,7 @@ function onResults(results) {
 		}
 	}
 	if (results.multiHandLandmarks.length > 0) {
-		gestureAnalysis(results);
+		gestureAnalysis(results.multiHandLandmarks[0]);
 	  };
 	canvasCtx.restore();
 }
