@@ -2,14 +2,6 @@ var db = new Pouch('todos');
 var remoteCouch = false;
 var cookie;
 
-var userExists = function(username){
-    return db.get(username).then(function () {
-        return Promise.resolve(true);
-    }).catch(function () {
-        return Promise.resolve(false);
-    });
-};
-
 function addUser(text, score, playTime) {
 	var todo = {
 		_id: text,
@@ -22,22 +14,6 @@ function addUser(text, score, playTime) {
 			console.log('Successfully added a user!');
 		}
 	});
-}
-
-function sync() {
-	console.log('syncing');
-	var remote = new PouchDB(remoteCouch, {headers: {'Cookie': cookie}});
-	var pushRep = db.replicate.to(remote, {
-		continuous: true,
-		complete: syncError
-	});
-	var pullRep = db.replicate.from(remote, {
-		continuous: true,
-		complete: syncError
-	});
-}
-function syncError() {
-	console.log('sync error');
 }
 
 function removeAll(db){
@@ -64,7 +40,7 @@ db.allDocs({include_docs: true, startkey: "woah", endkey: "woah"}, function(err,
 
 let currently_selected = -1;
 let last_selected = -1;
-let user_count;
+let user_count = 0;
 function redrawUserTables(){
 	var table = document.getElementById("user_data");
 	table.innerHTML = "<thead><tr><th>Username</th><th>Average Score</th><th>Total Playtime</th></tr></thead><tbody></tbody>";
@@ -79,8 +55,8 @@ function redrawUserTables(){
 				var score = row.insertCell();
 				var playTime = row.insertCell();
 				name.innerHTML = doc2.name;
-				score.innerHTML = String(doc2.score);
-				playTime.innerHTML = String(doc2.playTime);
+				score.innerHTML = Number.parseFloat(doc2.score).toFixed(2);
+				playTime.innerHTML = Number.parseFloat(doc2.playTime).toFixed(2);
 				user_count += 1;
 			}
 		);
@@ -121,20 +97,6 @@ function newUserKeyPressHandler( event ) {
 		if (newUserDom.value != ""){
 			addUser(newUserDom.value, 0, 0);
 		} else {
-			/*
-			db.allDocs({include_docs: true}, function(err, doc) {
-				doc.rows.forEach(
-					function(doc){
-						//remember this!
-						doc = doc.doc;
-						console.log(doc);
-						doc.playTime += 1;
-						doc.score += 1;
-						return db.put(doc);
-					}
-				);
-			});
-			*/
 			alert("username cannot be empty");
 		}
 
@@ -148,6 +110,12 @@ let canvasElement;
 let canvasCtx;
 let hands;
 let camera;
+let upCount = 0;
+let downCount = 0;
+let okCount = 0;
+
+let action = 0, count = 0;
+
 function onResults(results) {
 	canvasCtx.save();
 	canvasCtx.clearRect(0, 0, canvasElement.width/5, canvasElement.height/5);
@@ -160,15 +128,117 @@ function onResults(results) {
 			drawLandmarks(canvasCtx, landmarks, {color: '#FF0000', lineWidth: 2});
 		}
 	}
+	let res = -1;
+
+	
+
 	if (results.multiHandLandmarks.length > 0) {
-		gestureAnalysis(results.multiHandLandmarks[0]);
+
+		let gesture = gestureAnalysis(results.multiHandLandmarks[0]);
+
+		function move(width) {
+			const elem = document.getElementById("myBar");
+			elem.style.width = width + "%";
+		}
+
+		if (gesture == 0) {
+			okCount++;
+			upCount = 0;
+			downCount = 0;
+			if(okCount > 50) {
+				okCount = 0;
+				// redirect to the game screen now.
+				let selectedUser = document.querySelector("tr.user_selected > td:nth-child(1)").innerHTML;
+				window.location.href = "index.html?" + encodeURIComponent(selectedUser);
+			}
+			move(Math.round((okCount / 50) * 100));
+		}
+		else if (gesture == 1) {
+			upCount++;
+			okCount = 0;
+			downCount = 0;
+			if (upCount > 25) {
+				upCount = 0;
+				let selectedRow = document.querySelector("tr.user_selected");
+				let allRows = document.querySelectorAll("table#user_data tbody tr");
+  				let selectedIndex = Array.from(allRows).indexOf(selectedRow);
+				if (selectedIndex !== -1 && selectedIndex > 0) {
+				// 선택된 행이 테이블 내에 있고, 첫 행이 아닌 경우
+				selectedRow.classList.remove("user_selected"); // user_selected 클래스 제거
+				let prevRow = allRows[selectedIndex - 1]; // 다음 행 선택
+				prevRow.classList.add("user_selected"); // user_selected 클래스 추가
+				}
+				console.log("selected Row "+ selectedIndex);
+			}
+			move(Math.round((upCount / 25) * 100));
+
+		}
+		else if (gesture == 2) {
+			downCount ++;
+			okCount = 0;
+			upCount = 0;
+			if(downCount > 25) {
+				downCount = 0;
+				let selectedRow = document.querySelector("tr.user_selected");
+				let allRows = document.querySelectorAll("table#user_data tbody tr");
+  				let selectedIndex = Array.from(allRows).indexOf(selectedRow);
+				  
+				if (selectedIndex !== -1 && selectedIndex < allRows.length - 1) {
+					// 선택된 행이 테이블 내에 있고, 마지막 행이 아닌 경우
+					selectedRow.classList.remove("user_selected"); // user_selected 클래스 제거
+					let nextRow = allRows[selectedIndex + 1]; // 다음 행 선택
+					nextRow.classList.add("user_selected"); // user_selected 클래스 추가
+				}
+				console.log("selected Row "+ selectedIndex);
+			}
+			move(Math.round((downCount / 25) * 100));
+		}
+		else {
+			okCount = 0;
+			upCount = 0;
+			downCount = 0;
+			move(Math.round((downCount / 25) * 100));
+
+		}
 	  };
 	canvasCtx.restore();
+	//count the things
+	if (res != action){
+		action = res;
+		count = 0;
+	} else if (res >= 0) {
+		count += 1;
+	}
+	//activate
+	if (count >= 10){
+		count = 0;
+		switch (res){
+			case 0: //ok
+				if (user_count != 0){
+					var table = document.getElementById('user_data').getElementsByTagName('tbody')[0];
+					let username = table.rows[currently_selected].cells[0].innerHTML;
+					window.location.replace("./index.html?name=" + username);
+				}
+				break;
+			case 1:
+				if (user_count != 0){
+					currently_selected = (currently_selected + 1) % user_count;
+				}
+				redrawUserTables();
+				break; 
+			case 2:
+				if (user_count != 0){
+					currently_selected = (currently_selected + user_count - 1) % user_count;
+				}
+				redrawUserTables();
+				break;
+
+		}
+	}
 }
 
 //function setup() {
 window.onload = function(){
-	console.log("inside setup");
 	videoElement = document.getElementById("in_video");
 	canvasElement = document.getElementById("out_canvas");
 	canvasCtx = canvasElement.getContext('2d');
