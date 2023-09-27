@@ -2,14 +2,6 @@ var db = new Pouch('todos');
 var remoteCouch = false;
 var cookie;
 
-var userExists = function(username){
-    return db.get(username).then(function () {
-        return Promise.resolve(true);
-    }).catch(function () {
-        return Promise.resolve(false);
-    });
-};
-
 function addUser(text, score, playTime) {
 	var todo = {
 		_id: text,
@@ -22,22 +14,6 @@ function addUser(text, score, playTime) {
 			console.log('Successfully added a user!');
 		}
 	});
-}
-
-function sync() {
-	console.log('syncing');
-	var remote = new PouchDB(remoteCouch, {headers: {'Cookie': cookie}});
-	var pushRep = db.replicate.to(remote, {
-		continuous: true,
-		complete: syncError
-	});
-	var pullRep = db.replicate.from(remote, {
-		continuous: true,
-		complete: syncError
-	});
-}
-function syncError() {
-	console.log('sync error');
 }
 
 function removeAll(db){
@@ -64,7 +40,7 @@ db.allDocs({include_docs: true, startkey: "woah", endkey: "woah"}, function(err,
 
 let currently_selected = -1;
 let last_selected = -1;
-let user_count;
+let user_count = 0;
 function redrawUserTables(){
 	var table = document.getElementById("user_data");
 	table.innerHTML = "<thead><tr><th>Username</th><th>Average Score</th><th>Total Playtime</th></tr></thead><tbody></tbody>";
@@ -148,6 +124,9 @@ let canvasElement;
 let canvasCtx;
 let hands;
 let camera;
+
+let action = 0, count = 0;
+
 function onResults(results) {
 	canvasCtx.save();
 	canvasCtx.clearRect(0, 0, canvasElement.width/5, canvasElement.height/5);
@@ -160,15 +139,47 @@ function onResults(results) {
 			drawLandmarks(canvasCtx, landmarks, {color: '#FF0000', lineWidth: 2});
 		}
 	}
+	let res = -1;
 	if (results.multiHandLandmarks.length > 0) {
-		gestureAnalysis(results);
-	  };
+		res = gestureAnalysisOneHand(results);
+	};
 	canvasCtx.restore();
+	//count the things
+	if (res != action){
+		action = res;
+		count = 0;
+	} else if (res >= 0) {
+		count += 1;
+	}
+	//activate
+	if (count >= 10){
+		count = 0;
+		switch (res){
+			case 0: //ok
+				if (user_count != 0){
+					var table = document.getElementById('user_data').getElementsByTagName('tbody')[0];
+					let username = table.rows[currently_selected].cells[0].innerHTML;
+					window.location.replace("./index.html?name=" + username);
+				}
+				break;
+			case 1:
+				if (user_count != 0){
+					currently_selected = (currently_selected + 1) % user_count;
+				}
+				redrawUserTables();
+				break; 
+			case 2:
+				if (user_count != 0){
+					currently_selected = (currently_selected + user_count - 1) % user_count;
+				}
+				redrawUserTables();
+				break;
+		}
+	}
 }
 
 //function setup() {
 window.onload = function(){
-	console.log("inside setup");
 	videoElement = document.getElementById("in_video");
 	canvasElement = document.getElementById("out_canvas");
 	canvasCtx = canvasElement.getContext('2d');
@@ -199,17 +210,6 @@ window.onload = function(){
 	//adding new user
 	newUserDom = document.getElementById('new_user');
 	newUserDom.addEventListener('keypress', newUserKeyPressHandler, false);
-}
-
-
-function draw() {
-	
-	clear();
-	image(video, 0, 0, width, height);
-
-	if (predictions.length > 0) {
-		drawKeypoints();
-	}
 }
 
 
