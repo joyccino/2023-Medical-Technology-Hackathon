@@ -24,23 +24,31 @@
             </div>
             <table id="user_data" class="login_table">
                 <!-- databse will feed into here -->
-                <tr>
-                    <th>Username</th>
-                    <th>Average Score</th>
-                    <th>Total Playtime</th>
-                </tr>
-                <tr>
-                    <td>Bob bobby</td>
-                    <td>94</td>
-                    <td>1 hours 30 mins</td>
-                </tr>
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Average Score</th>
+                        <th>Total Playtime</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Bob bobby</td>
+                        <td>94</td>
+                        <td>1 hours 30 mins</td>
+                    </tr>
+                </tbody>
             </table>
         </div>
     </div>
 
-    <div id="login_canvas" class="flex justify-center mx-3">
-        <!-- camera will go here -->
 
+    <div id="webcam" class="flex justify-center flex-wrap items-start mt-10">
+        <div id="load-app-save" class="bg-gray-300 rounded-t-md rounded-b-md shadow-2xl mb-12">
+            <div id="login_canvas" class="flex justify-center mx-3">
+                <!-- camera goes here -->
+            </div>
+        </div>
     </div>
 
 </body>

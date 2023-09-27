@@ -4,8 +4,9 @@ var cookie;
 
 function addTodo(text) {
 	var todo = {
-		title: text,
-		completed: false
+		name: text,
+    	score: 30,
+    	playTime: 100
 	};
 	db.post(todo, function(err, result) {
 		if (!err) {
@@ -34,15 +35,36 @@ function syncError() {
 	console.log('sync error');
 }
 
+function removeAll(db){
+	db.allDocs({include_docs: true}, function(err, doc) {
+		doc.rows.forEach(
+			function(doc){
+				return db.remove(doc);
+			}
+		);
+		console.log(doc);
+	});
+}
 
-db.allDocs({include_docs: true}, function(err, doc) {
-	doc.rows.forEach(
-		function(doc){
-			return db.remove(doc);
-		}
-	);
-	console.log(doc);
-});
+let currently_selected = -1;
+function redrawUserTables(){
+	var table = document.getElementById("user_data");
+	table.innerHTML = "<thead><tr><th>Username</th><th>Average Score</th><th>Total Playtime</th></tr></thead><tbody></tbody>";
+	db.allDocs({include_docs: true}, function(err, doc) {
+		doc.rows.forEach(
+			function(doc2){
+				doc2 = doc2.doc;
+				var row = table.insertRow();
+				var name = row.insertCell();
+				var score = row.insertCell();
+				var playTime = row.insertCell();
+				name.innerHTML = doc2.name;
+				score.innerHTML = String(doc2.score);
+				playTime.innerHTML = String(doc2.playTime);
+			}
+		);
+	});
+}
 
 let type;
 let video;
@@ -79,6 +101,9 @@ function setup() {
 
 	textFont('Open Sans');
 	textSize(22);
+
+	//draw table
+	redrawUserTables();
 }
 
 function saveImage() {
