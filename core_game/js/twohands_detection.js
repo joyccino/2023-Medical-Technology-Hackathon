@@ -4,7 +4,7 @@ const videoElementOfUser = document.getElementsByClassName('input_video')[0];
 const videoElementOfDemo = document.getElementsByClassName('demo_video')[0];
 const canvasElement = document.getElementsByClassName('output_canvas')[0];
 const canvasCtx = canvasElement.getContext('2d');
-    
+
 function onResults(results) {
   canvasCtx.save();
   canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
@@ -31,6 +31,7 @@ hands.setOptions({
   minTrackingConfidence: 0.5
 });
 hands.onResults(onResults);
+
 
 const camera = new Camera(videoElementOfUser, {
   onFrame: async () => {

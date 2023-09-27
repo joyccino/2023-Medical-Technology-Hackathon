@@ -605,6 +605,10 @@ video {
   width: 100%;
 }
 
+.user_selected {
+  background: orange;
+}
+
 @media (min-width: 640px) {
   .container {
     max-width: 640px;
@@ -1024,4 +1028,83 @@ video {
       max-width: 1280px;
     }
   }
+}
+
+#webcam {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 40%;
+  height: 50%;
+}
+
+#login_canvas {
+  width: 80%;
+  height: 80%;
+}
+
+#scoreboard {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 10px;
+  border: 2px solid white; /* Add a white border around the scoreboard */
+  
+}
+#board {
+  font-size: 40px; /* Increase font size */
+  font-weight: bold; /* Make the text bold */
+}
+#score {
+  font-size: 100px; /* Increase font size */
+  font-weight: bold; /* Make the text bold */
+}
+
+#new_user,
+.edit {
+  position: relative;
+  margin: 0;
+  width: 100%;
+  font-size: 24px;
+  font-family: inherit;
+  line-height: 1.4em;
+  border: 0;
+  outline: none;
+  color: inherit;
+  padding: 6px;
+  border: 1px solid #999;
+  box-shadow: inset 0 -1px 5px 0 rgba(0, 0, 0, 0.2);
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  -o-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-font-smoothing: antialiased;
+  -ms-font-smoothing: antialiased;
+  -o-font-smoothing: antialiased;
+  font-smoothing: antialiased;
+}
+
+#new_user {
+  padding: 16px 16px 16px 60px;
+  border: none;
+  background: rgba(0, 0, 0, 0.02);
+  z-index: 2;
+  box-shadow: none;
+}
+
+.output_canvas {
+  transform: scaleX(-1);
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  width: 40%;
+  height: 45%;
+}
+
+.input_video {
+  transform: scaleX(-1);
+  display: none;
 }
