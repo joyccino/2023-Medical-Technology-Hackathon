@@ -13,17 +13,47 @@
     <script src="js/pouchdb-nightly.js"></script>
     <script src="js/base.js"></script>
     <script src="js/app_login.js"></script>
+    <script src="js/fingerBentDetector.js"></script>
 </head>
+<style>
+    body {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      justify-content: stretch;
+      height: 100vh;
+    }
+    .out_canvas_container {
+      transform: scaleX(-1);
+      position: absolute;
+      bottom: 10px;
+      right: 0;
+      width: calc(50% - 20px);
+      height: calc(47% - 20px);
+    }
+    .out_canvas {
+      width: 100%;
+      height: 100%;
+    }
+    th {
+        font-size: 35px;
+    }
+    td {
+        font-size: 30px;
+    }
+    
+</style>
 
 <body class="bg-gray-100 text-gray-800">
     <div class="flex justify-center flex-wrap items-start mt-10">
         <div id="load-app-save" class="bg-gray-300 rounded-t-md rounded-b-md shadow-2xl mb-12" style="min-width: 680px;">
             <div id="status" class=" text-center font-semibold text-gray-700 py-2 px-5">
                 <!-- this will get replaced with hand gesture prompts -->
-                <span>Loading...</span>
             </div>
             <div class="text-center text-gray-700 py-5 px-5">
-                <input id="new_user" placeholder="what is your name" autofocus maxlength="25">
+                <input id="new_user" placeholder="Enter the name of the new user!" autofocus maxlength="25">
             </div>
             <table id="user_data" class="login_table">
                 <!-- databse will feed into here -->
@@ -45,17 +75,9 @@
         </div>
     </div>
 
-
-    <!-- <div id="webcam" class="flex justify-center flex-wrap items-start mt-10">
-        <div id="load-app-save" class="bg-gray-300 rounded-t-md rounded-b-md shadow-2xl mb-12">
-            <div id="login_canvas" class="flex justify-center mx-3">
-            </div>
-        </div>
-    </div> -->
-
     <video id="in_video" class="input_video" style="display: none"></video>
-    <canvas id="out_canvas" class="output_canvas" width="1280px" height="720px"></canvas>
-
+    <div class="out_canvas_container">
+        <canvas id="out_canvas" class="output_canvas" width="1280px" height="720px"></canvas>
+    </div>
 </body>
-
 </html>
