@@ -6,6 +6,8 @@
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+  <script src="js/pouchdb-nightly.js"></script>
+  <script src="js/base.js"></script>
 </head>
 <style>
     body {
@@ -35,7 +37,7 @@
     }
 
     #scoreboard span {
-        font-size: 55px;
+        font-size: 40px;
     }
 
     .output_canvas {
@@ -53,13 +55,13 @@
     }
 </style>
 <body>
-    <video class = "demo_video" controls="controls" muted="muted" crossorigin="anonymous">
-        <!-- <source src="../resources/demosvid.mp4" type="video/mp4" /> -->
+    <video class = "demo_video">
+        <source src="../resources/demosvid.mp4" type="video/mp4" />
     </video>
-    <div id = "scoreboard"><span id="board">SCORE:</span> <span id="score">0%</span></div>
+    <div id = "scoreboard"><span id="board">getting ready</span> <span id="score"></span></div>
     <video class="input_video" style="display: none"></video>
     <canvas class="output_canvas" width="1280px" height="720px"></canvas>
-    <button class="btn-lg btn-success" onclick="location.href='generate_from_file'">ACCEPT</button>
+    <button id = "status_button" class="btn-lg btn-success" onclick="location.href='generate_from_file'">getting ready...</button>
 </body>
 <script src="js/twohands_detection.js"></script>
 </html>
