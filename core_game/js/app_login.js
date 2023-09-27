@@ -148,7 +148,8 @@ function onResults(results) {
 			if(okCount > 50) {
 				okCount = 0;
 				// redirect to the game screen now.
-				window.location.href = "index.html";
+				
+				window.location.href = "index.html?" + encodeURIComponent("Joy");
 
 			}
 			move(Math.round((okCount / 50) * 100));
