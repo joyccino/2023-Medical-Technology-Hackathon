@@ -5,6 +5,7 @@ const videoElementOfDemo = document.getElementsByClassName('demo_video')[0];
 const canvasElement = document.getElementsByClassName('output_canvas')[0];
 const canvasCtx = canvasElement.getContext('2d');
 
+let startTime;
 function onResults(results) {
   canvasCtx.save();
   canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
@@ -17,6 +18,11 @@ function onResults(results) {
       drawLandmarks(canvasCtx, landmarks, {color: '#FF0000', lineWidth: 2});
     }
   }
+  if (user_results.length == 0){
+    startTime = Date.now();
+  }
+  results.image = null;
+  results.time = Date.now() - startTime;
   user_results.push(results);
   postureAnalysis(results);
   canvasCtx.restore();
