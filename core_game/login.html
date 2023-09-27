@@ -1,7 +1,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>SquatCam</title>
+    <title>Login</title>
     <link rel="stylesheet" type="text/css" href="style.css">
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/p5.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/addons/p5.dom.min.js"></script>
@@ -26,10 +26,9 @@
       height: 100vh;
     }
     .out_canvas_container {
-      transform: scaleX(-1);
+      
       position: absolute;
       bottom: 10px;
-      right: 0;
       width: calc(50% - 20px);
       height: calc(47% - 20px);
     }
@@ -43,12 +42,27 @@
     td {
         font-size: 30px;
     }
-    
+    #myProgress {
+        position: relative;
+        width: 100%;
+        background-color: grey;   
+    }
+
+    #myBar {
+        width: 1%;
+        height: 30px;
+        background-color: green;
+    }
 </style>
 
 <body class="bg-gray-100 text-gray-800">
+    
     <div class="flex justify-center flex-wrap items-start mt-10">
+        
         <div id="load-app-save" class="bg-gray-300 rounded-t-md rounded-b-md shadow-2xl mb-12" style="min-width: 680px;">
+            <div id="myProgress">
+                <div id="myBar"></div>
+            </div>
             <div id="status" class=" text-center font-semibold text-gray-700 py-2 px-5">
                 <!-- this will get replaced with hand gesture prompts -->
             </div>
@@ -77,6 +91,7 @@
 
     <video id="in_video" class="input_video" style="display: none"></video>
     <div class="out_canvas_container">
+        
         <canvas id="out_canvas" class="output_canvas" width="1280px" height="720px"></canvas>
     </div>
 </body>

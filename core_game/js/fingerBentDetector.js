@@ -36,7 +36,7 @@ function gestureAnalysis(results){
 	}
 
 	if (compareToGesture(arr, STANDARD_GESTURES.thumb_down, detectThumb2, results)){
-		// a thumb up?
+		// a thumb down?
 		console.log("thumb down");
 		return 2;
 	}

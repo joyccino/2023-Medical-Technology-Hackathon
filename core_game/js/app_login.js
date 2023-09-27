@@ -126,6 +126,11 @@ function onResults(results) {
 		}
 	}
 	let res = -1;
+
+	let upCount = 0;
+	let downCount = 0;
+	let okCount = 0;
+
 	if (results.multiHandLandmarks.length > 0) {
     	res = gestureAnalysis(results.multiHandLandmarks[0]);
 	};
@@ -160,6 +165,7 @@ function onResults(results) {
 				}
 				redrawUserTables();
 				break;
+
 		}
 	}
 }
