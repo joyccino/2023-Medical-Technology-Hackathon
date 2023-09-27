@@ -17,6 +17,7 @@ function onResults(results) {
       drawLandmarks(canvasCtx, landmarks, {color: '#FF0000', lineWidth: 2});
     }
   }
+  postureAnalysis(results);
   canvasCtx.restore();
 }
 
@@ -31,7 +32,7 @@ hands.setOptions({
 });
 hands.onResults(onResults);
 
-/*
+
 const camera = new Camera(videoElementOfDemo, {
   onFrame: async () => {
     await hands.send({image: videoElementOfDemo});
@@ -40,9 +41,9 @@ const camera = new Camera(videoElementOfDemo, {
   height: 720
 });
 camera.start();
-*/
-window.setInterval(function(){
-  // call your function here
-  hands.send({image: videoElementOfDemo});
-}, 1000 / 30);
 
+function postureAnalysis(results){
+  if (results.multiHandLandmarks.length > 0) {
+    console.log(results.multiHandLandmarks.length);
+  };
+};
