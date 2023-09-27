@@ -161,7 +161,7 @@ function onResults(results) {
 		}
 	}
 	if (results.multiHandLandmarks.length > 0) {
-		gestureAnalysis(results);
+		gestureAnalysis(results.multiHandLandmarks[0]);
 	  };
 	canvasCtx.restore();
 }
@@ -201,7 +201,6 @@ window.onload = function(){
 	newUserDom.addEventListener('keypress', newUserKeyPressHandler, false);
 }
 
-
 function draw() {
 	
 	clear();
@@ -211,7 +210,6 @@ function draw() {
 		drawKeypoints();
 	}
 }
-
 
 // A function to draw ellipses over the detected keypoints
 function drawKeypoints() {
