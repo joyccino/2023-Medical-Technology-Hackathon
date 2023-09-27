@@ -148,8 +148,8 @@ function onResults(results) {
 			if(okCount > 50) {
 				okCount = 0;
 				// redirect to the game screen now.
-				
-				window.location.href = "index.html?" + encodeURIComponent("Joy");
+				let selectedUser = document.querySelector("tr.user_selected > td:nth-child(1)").innerHTML;
+				window.location.href = "index.html?" + encodeURIComponent(selectedUser);
 
 			}
 			move(Math.round((okCount / 50) * 100));
@@ -158,25 +158,27 @@ function onResults(results) {
 			upCount++;
 			okCount = 0;
 			downCount = 0;
-			if (upCount > 20) {
+			if (upCount > 25) {
 				upCount = 0;
 			}
-			move(Math.round((upCount / 20) * 100));
+			move(Math.round((upCount / 25) * 100));
 
 		}
 		else if (gesture == 2) {
 			downCount ++;
 			okCount = 0;
 			upCount = 0;
-			if(downCount > 20) {
+			if(downCount > 25) {
 				downCount = 0;
 			}
-			move(Math.round((downCount / 20) * 100));
+			move(Math.round((downCount / 25) * 100));
 		}
 		else {
 			okCount = 0;
 			upCount = 0;
 			downCount = 0;
+			move(Math.round((downCount / 25) * 100));
+
 		}
 	  };
 	canvasCtx.restore();
