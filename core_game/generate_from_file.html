@@ -53,13 +53,13 @@
     }
 </style>
 <body>
+    <input id="video_url" placeholder="link to the video" autofocus maxlength="25">
     <video class = "demo_video" controls="controls" muted="muted" crossorigin="anonymous">
-        <!-- <source src="../resources/demosvid.mp4" type="video/mp4" /> -->
     </video>
     <div id = "scoreboard"><span id="board">SCORE:</span> <span id="score">0%</span></div>
     <video class="input_video" style="display: none"></video>
     <canvas class="output_canvas" width="1280px" height="720px"></canvas>
-    <button class="btn-lg btn-success" onclick="location.href='generate_from_file'">ACCEPT</button>
+    <a download="info.txt" id="downloadlink" style="display: none">Download</a>
 </body>
-<script src="js/twohands_detection.js"></script>
+<script src="js/generate_from_file.js"></script>
 </html>
