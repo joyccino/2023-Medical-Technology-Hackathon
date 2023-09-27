@@ -3,9 +3,13 @@
     <meta charset="UTF-8">
     <title>SquatCam</title>
     <link rel="stylesheet" type="text/css" href="style.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/p5.min.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/p5.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/addons/p5.dom.min.js"></script>
-    <script src="https://unpkg.com/ml5@latest/dist/ml5.min.js"></script>
+    <script src="https://unpkg.com/ml5@latest/dist/ml5.min.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
     <script src="js/pouchdb-nightly.js"></script>
     <script src="js/base.js"></script>
     <script src="js/app_login.js"></script>
@@ -42,13 +46,15 @@
     </div>
 
 
-    <div id="webcam" class="flex justify-center flex-wrap items-start mt-10">
+    <!-- <div id="webcam" class="flex justify-center flex-wrap items-start mt-10">
         <div id="load-app-save" class="bg-gray-300 rounded-t-md rounded-b-md shadow-2xl mb-12">
             <div id="login_canvas" class="flex justify-center mx-3">
-                <!-- camera goes here -->
             </div>
         </div>
-    </div>
+    </div> -->
+
+    <video id="in_video" class="input_video" style="display: none"></video>
+    <canvas id="out_canvas" class="output_canvas" width="1280px" height="720px"></canvas>
 
 </body>
 

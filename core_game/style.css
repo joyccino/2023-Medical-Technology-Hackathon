@@ -1094,3 +1094,17 @@ video {
   z-index: 2;
   box-shadow: none;
 }
+
+.output_canvas {
+  transform: scaleX(-1);
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  width: 40%;
+  height: 45%;
+}
+
+.input_video {
+  transform: scaleX(-1);
+  display: none;
+}

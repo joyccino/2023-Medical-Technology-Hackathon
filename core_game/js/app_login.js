@@ -2,15 +2,24 @@ var db = new Pouch('todos');
 var remoteCouch = false;
 var cookie;
 
+var userExists = function(username){
+    return db.get(username).then(function () {
+        return Promise.resolve(true);
+    }).catch(function () {
+        return Promise.resolve(false);
+    });
+};
+
 function addUser(text, score, playTime) {
 	var todo = {
+		_id: text,
 		name: text,
-    	score: score,
-    	playTime: playTime
+		score: score,
+		playTime: playTime
 	};
-	db.post(todo, function(err, result) {
+	db.put(todo, function(err, result) {
 		if (!err) {
-		console.log('Successfully posted a todo!');
+			console.log('Successfully added a user!');
 		}
 	});
 }
@@ -27,10 +36,6 @@ function sync() {
 		complete: syncError
 	});
 }
-
-// EDITING STARTS HERE (you dont need to edit anything below this line)
-
-// There was some form or error syncing
 function syncError() {
 	console.log('sync error');
 }
@@ -39,10 +44,14 @@ function removeAll(db){
 	db.allDocs({include_docs: true}, function(err, doc) {
 		doc.rows.forEach(
 			function(doc){
-				return db.remove(doc);
+				//remember this!
+				doc._deleted = true;
+				doc._id = doc.id;
+				doc._rev = doc.value.rev;
+				console.log(doc);
+				db.put(doc);
 			}
 		);
-		console.log(doc);
 	});
 }
 
@@ -99,45 +108,65 @@ let video;
 let handPose;
 let predictions = [];
 
-
 var newUserDom;
 function newUserKeyPressHandler( event ) {
 	if (event.keyCode === 13) { //enter key
-		addUser(newUserDom.value, 0, 0);
+		if (newUserDom.value != ""){
+			addUser(newUserDom.value, 0, 0);
+		}
+
 		redrawUserTables();
 		newUserDom.value = '';
 	}
 }
 
-function setup() {
-	console.log("inside setup");
-	let canvas = createCanvas(640, 480);
-	canvas.parent('login_canvas');
-
-	constraints = {
-		video: {
-			width: { max: 640 },
-			height: { max: 480 },
-			facingMode: {
-				ideal: 'environment'
-			}
+let videoElement;
+let canvasElement;
+let canvasCtx;
+let hands;
+let camera;
+function onResults(results) {
+	canvasCtx.save();
+	canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
+	canvasCtx.drawImage(
+		results.image, 0, 0, canvasElement.width, canvasElement.height);
+	if (results.multiHandLandmarks) {
+		for (const landmarks of results.multiHandLandmarks) {
+			drawConnectors(canvasCtx, landmarks, HAND_CONNECTIONS,
+							{color: '#00FF00', lineWidth: 5});
+			drawLandmarks(canvasCtx, landmarks, {color: '#FF0000', lineWidth: 2});
 		}
-	};
+	}
+	canvasCtx.restore();
+}
 
-	video = createCapture(constraints);
-	video.size(width, height);
-	handPose = ml5.handpose(video, modelReady);
+//function setup() {
+window.onload = function(){
+	console.log("inside setup");
+	videoElement = document.getElementById("in_video");
+	canvasElement = document.getElementById("out_canvas");
+	canvasCtx = canvasElement.getContext('2d');
 
-	
-	handPose.on('hand', function(results) {
-		predictions = results;
+	hands = new Hands({locateFile: (file) => {
+		return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`;
+	}});
+	hands.setOptions({
+		maxNumHands: 2,
+		modelComplexity: 1,
+		minDetectionConfidence: 0.5,
+		minTrackingConfidence: 0.5
 	});
+	hands.onResults(onResults);
+	
+	camera = new Camera(videoElement, {
+		onFrame: async () => {
+			await hands.send({image: videoElement});
+		},
+		width: 1280,
+		height: 720
+	});
+	camera.start();
 
-	// Hide the video element, and just show the canvas
-	video.hide();
-
-	textFont('Open Sans');
-	textSize(22);
 
 	//draw table
 	redrawUserTables();
