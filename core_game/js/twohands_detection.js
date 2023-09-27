@@ -9,7 +9,19 @@ const videoElementOfDemo = document.getElementsByClassName('demo_video')[0];
 const canvasElement = document.getElementsByClassName('output_canvas')[0];
 const canvasCtx = canvasElement.getContext('2d');
 
+let started = false, startTime = -1;
+let points = 0;
+
 function onResults(results) {
+  if (!started){
+    started = true;
+    document.getElementById("board").innerHTML = "SCORE:";
+    document.getElementById("score").innerHTML = "0%";
+    startTime = Date.now();
+    videoElementOfDemo.addEventListener('ended', finaliseLevel, false);
+    videoElementOfDemo.play();
+  }
+
   canvasCtx.save();
   canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
   canvasCtx.drawImage(
@@ -36,18 +48,6 @@ hands.setOptions({
 });
 hands.onResults(onResults);
 
-async function onFrame() {
-  if (!videoElementOfDemo.paused && !videoElementOfDemo.ended) {
-    await hands.send({
-      image: videoElementOfDemo
-    });
-  // https://stackoverflow.com/questions/65144038/how-to-use-requestanimationframe-with-promise    
-    await new Promise(requestAnimationFrame);
-    onFrame();
-  } else
-    setTimeout(onFrame, 500);
-}
-
 camera = new Camera(videoElementOfUser, {
   onFrame: async () => {
     await hands.send({image: videoElementOfUser});
@@ -56,6 +56,28 @@ camera = new Camera(videoElementOfUser, {
   height: 720
 });
 camera.start();
+
+function finaliseLevel(){
+  //alert user
+  alert("you are done!");
+  //update database
+  let username = window.location.search.split("=")[1];
+  console.log(username);
+  db.allDocs({include_docs: true, startkey: username, endkey: username}, function(err, doc) {
+    doc.rows.forEach(
+      function(doc){
+        doc = doc.doc;
+        console.log(doc);
+        doc.playTime += Math.min(Math.ceil((Date.now() - startTime) / (1000 * 60)), 1);
+        doc.score = Math.max(doc.score, points);
+        return db.put(doc);
+      }
+    );
+  });
+  //redirect
+  window.location.replace("./login.html");
+}
+
 
 function calculateAngle(a, b, c) {
   a = [a["x"], a["y"]]; // First

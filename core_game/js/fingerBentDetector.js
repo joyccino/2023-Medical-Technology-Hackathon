@@ -9,16 +9,13 @@ let STANDARD_GESTURES = {
 	thumb_down: [true, false, false, false, false]
 };
 
-function gestureAnalysis(results){
+function gestureAnalysisOneHand(results){
 	// ok sign?
 	let arr = getBentStraight(results);
 	console.log(arr);
 	if (compareToGesture(arr, STANDARD_GESTURES.ok)){
 		console.log("ok detected");
-		thumbUpValidation = 0;
-		thumbDownValidation = 0;
-		okValidation++;
-		return;
+		return 0;
 	}
 
 	function detectThumb(arr, landmark){
@@ -30,10 +27,7 @@ function gestureAnalysis(results){
 	if (compareToGesture(arr, STANDARD_GESTURES.thumb_up, detectThumb, results)){
 		// a thumb up?
 		console.log("thumb up");
-		thumbUpValidation = 0;
-		okValidation = 0;
-		thumbUpValidation++;
-		return;
+		return 1;
 	}
 
 	function detectThumb2(arr, landmark){
@@ -45,11 +39,10 @@ function gestureAnalysis(results){
 	if (compareToGesture(arr, STANDARD_GESTURES.thumb_down, detectThumb2, results)){
 		// a thumb up?
 		console.log("thumb down");
-		thumbDownValidation = 0;
-		okValidation = 0;
-		thumbDownValidation++;
-		return;
+		return 2;
 	}
+
+	return -1;
 }
 
 function getBentStraight(landmarks){
