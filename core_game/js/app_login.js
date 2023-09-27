@@ -150,7 +150,7 @@ let hands;
 let camera;
 function onResults(results) {
 	canvasCtx.save();
-	canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
+	canvasCtx.clearRect(0, 0, canvasElement.width/5, canvasElement.height/5);
 	canvasCtx.drawImage(
 		results.image, 0, 0, canvasElement.width, canvasElement.height);
 	if (results.multiHandLandmarks) {
@@ -160,6 +160,9 @@ function onResults(results) {
 			drawLandmarks(canvasCtx, landmarks, {color: '#FF0000', lineWidth: 2});
 		}
 	}
+	if (results.multiHandLandmarks.length > 0) {
+		gestureAnalysis(results);
+	  };
 	canvasCtx.restore();
 }
 
@@ -174,10 +177,10 @@ window.onload = function(){
 		return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`;
 	}});
 	hands.setOptions({
-		maxNumHands: 2,
+		maxNumHands: 1,
 		modelComplexity: 1,
-		minDetectionConfidence: 0.5,
-		minTrackingConfidence: 0.5
+		minDetectionConfidence: 0.9,
+		minTrackingConfidence: 0.9
 	});
 	hands.onResults(onResults);
 	
@@ -190,7 +193,6 @@ window.onload = function(){
 	});
 	camera.start();
 
-
 	//draw table
 	redrawUserTables();
 
@@ -200,10 +202,6 @@ window.onload = function(){
 }
 
 
-function modelReady() {
-	select('#status').style('color', '#4A5568');
-	select('#status').html('Ready!✔ <i class="fas fa-check-circle" style="color:#4A5568;"></i>');
-}
 function draw() {
 	
 	clear();
