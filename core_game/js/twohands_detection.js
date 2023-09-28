@@ -22,9 +22,13 @@ function onResults(results) {
     started = true;
     document.getElementById("board").innerHTML = "SCORE:";
     document.getElementById("score").innerHTML = "0%";
-    startTime = Date.now();
+    //startTime = Date.now();
     videoElementOfDemo.addEventListener('ended', finaliseLevel, false);
     videoElementOfDemo.play();
+    videoElementOfDemo.onplaying = function() {
+      console.log('Video is now loaded and playing');
+      startTime = Date.now();
+    }
   }
   canvasCtx.save();
   canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
@@ -39,7 +43,7 @@ function onResults(results) {
   }
   canvasCtx.restore();
   
-  if(!done){
+  if(startTime != -1 && !done){
     //get closest frame to right now
     var timeOffset = Date.now() - startTime;
     //increment framecount if necessary
@@ -110,7 +114,7 @@ async function finaliseLevel(){
   //update database
   done = true;
   user_doc.playTime += (Date.now() - startTime) / (1000 * 60);
-  user_doc.score += totalScore / count;
+  user_doc.score = Math.max(user_doc.score, totalScore / count);
   console.log(user_doc);
   db.put(user_doc);
   //alert user
@@ -119,6 +123,8 @@ async function finaliseLevel(){
     return new Promise(resolve => setTimeout(resolve, ms));
   }
   await sleep(3000);
+
+  alert(`congratulations ${username}! You got a score of ${Number.parseFloat(totalScore / count).toFixed(2)}`);
 
   //redirect
   window.location.replace("./login.html");

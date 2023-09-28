@@ -43,7 +43,7 @@ let last_selected = -1;
 let user_count = 0;
 function redrawUserTables(){
 	var table = document.getElementById("user_data");
-	table.innerHTML = "<thead><tr><th>Username</th><th>Average Score</th><th>Total Playtime</th></tr></thead><tbody></tbody>";
+	table.innerHTML = "<thead><tr><th>Username</th><th>Highest Score</th><th>Total Playtime</th></tr></thead><tbody></tbody>";
 	table = document.getElementById('user_data').getElementsByTagName('tbody')[0];
 	user_count = 0;
 	db.allDocs({include_docs: true}, function(err, doc) {
@@ -130,17 +130,16 @@ function onResults(results) {
 	}
 	let res = -1;
 
-	
-
+	function move(width) {
+		const elem = document.getElementById("myBar");
+		elem.style.width = width + "%";
+	}
+	const countTargets = [50, 25, 25];
 	if (results.multiHandLandmarks.length > 0) {
 
-		let gesture = gestureAnalysis(results.multiHandLandmarks[0]);
+		res = gestureAnalysis(results.multiHandLandmarks[0]);
 
-		function move(width) {
-			const elem = document.getElementById("myBar");
-			elem.style.width = width + "%";
-		}
-
+		/*
 		if (gesture == 0) {
 			okCount++;
 			upCount = 0;
@@ -200,7 +199,8 @@ function onResults(results) {
 			move(Math.round((downCount / 25) * 100));
 
 		}
-	  };
+		*/
+	};
 	canvasCtx.restore();
 	//count the things
 	if (res != action){
@@ -209,8 +209,10 @@ function onResults(results) {
 	} else if (res >= 0) {
 		count += 1;
 	}
+
+	move(action >= 0 ? (count * 100 / countTargets[action]) : 0);
 	//activate
-	if (count >= 10){
+	if (action >= 0 && count >= countTargets[action]){
 		count = 0;
 		switch (res){
 			case 0: //ok
@@ -222,13 +224,13 @@ function onResults(results) {
 				break;
 			case 1:
 				if (user_count != 0){
-					currently_selected = (currently_selected + 1) % user_count;
+					currently_selected = (currently_selected + user_count - 1) % user_count;
 				}
 				redrawUserTables();
 				break; 
 			case 2:
 				if (user_count != 0){
-					currently_selected = (currently_selected + user_count - 1) % user_count;
+					currently_selected = (currently_selected + 1) % user_count;
 				}
 				redrawUserTables();
 				break;
