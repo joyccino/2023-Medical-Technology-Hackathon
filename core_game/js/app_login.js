@@ -110,6 +110,9 @@ let canvasElement;
 let canvasCtx;
 let hands;
 let camera;
+let upCount = 0;
+let downCount = 0;
+let okCount = 0;
 
 let action = 0, count = 0;
 
@@ -127,13 +130,77 @@ function onResults(results) {
 	}
 	let res = -1;
 
-	let upCount = 0;
-	let downCount = 0;
-	let okCount = 0;
+	
 
 	if (results.multiHandLandmarks.length > 0) {
-    	res = gestureAnalysis(results.multiHandLandmarks[0]);
-	};
+
+		let gesture = gestureAnalysis(results.multiHandLandmarks[0]);
+
+		function move(width) {
+			const elem = document.getElementById("myBar");
+			elem.style.width = width + "%";
+		}
+
+		if (gesture == 0) {
+			okCount++;
+			upCount = 0;
+			downCount = 0;
+			if(okCount > 50) {
+				okCount = 0;
+				// redirect to the game screen now.
+				let selectedUser = document.querySelector("tr.user_selected > td:nth-child(1)").innerHTML;
+				window.location.href = "index.html?" + encodeURIComponent(selectedUser);
+			}
+			move(Math.round((okCount / 50) * 100));
+		}
+		else if (gesture == 1) {
+			upCount++;
+			okCount = 0;
+			downCount = 0;
+			if (upCount > 25) {
+				upCount = 0;
+				let selectedRow = document.querySelector("tr.user_selected");
+				let allRows = document.querySelectorAll("table#user_data tbody tr");
+  				let selectedIndex = Array.from(allRows).indexOf(selectedRow);
+				if (selectedIndex !== -1 && selectedIndex > 0) {
+				// 선택된 행이 테이블 내에 있고, 첫 행이 아닌 경우
+				selectedRow.classList.remove("user_selected"); // user_selected 클래스 제거
+				let prevRow = allRows[selectedIndex - 1]; // 다음 행 선택
+				prevRow.classList.add("user_selected"); // user_selected 클래스 추가
+				}
+				console.log("selected Row "+ selectedIndex);
+			}
+			move(Math.round((upCount / 25) * 100));
+
+		}
+		else if (gesture == 2) {
+			downCount ++;
+			okCount = 0;
+			upCount = 0;
+			if(downCount > 25) {
+				downCount = 0;
+				let selectedRow = document.querySelector("tr.user_selected");
+				let allRows = document.querySelectorAll("table#user_data tbody tr");
+  				let selectedIndex = Array.from(allRows).indexOf(selectedRow);
+				  
+				if (selectedIndex !== -1 && selectedIndex < allRows.length - 1) {
+					// 선택된 행이 테이블 내에 있고, 마지막 행이 아닌 경우
+					selectedRow.classList.remove("user_selected"); // user_selected 클래스 제거
+					let nextRow = allRows[selectedIndex + 1]; // 다음 행 선택
+					nextRow.classList.add("user_selected"); // user_selected 클래스 추가
+				}
+				console.log("selected Row "+ selectedIndex);
+			}
+			move(Math.round((downCount / 25) * 100));
+		}
+		else {
+			okCount = 0;
+			upCount = 0;
+			downCount = 0;
+			move(Math.round((downCount / 25) * 100));
+
+		}
+	  };
 	canvasCtx.restore();
 	//count the things
 	if (res != action){
