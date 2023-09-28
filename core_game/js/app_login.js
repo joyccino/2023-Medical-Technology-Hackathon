@@ -43,7 +43,7 @@ let last_selected = -1;
 let user_count = 0;
 function redrawUserTables(){
 	var table = document.getElementById("user_data");
-	table.innerHTML = "<thead><tr><th>Username</th><th>Average Score</th><th>Total Playtime</th></tr></thead><tbody></tbody>";
+	table.innerHTML = "<thead><tr><th>Username</th><th>Highest Score</th><th>Total Playtime</th></tr></thead><tbody></tbody>";
 	table = document.getElementById('user_data').getElementsByTagName('tbody')[0];
 	user_count = 0;
 	db.allDocs({include_docs: true}, function(err, doc) {
@@ -224,13 +224,13 @@ function onResults(results) {
 				break;
 			case 1:
 				if (user_count != 0){
-					currently_selected = (currently_selected + 1) % user_count;
+					currently_selected = (currently_selected + user_count - 1) % user_count;
 				}
 				redrawUserTables();
 				break; 
 			case 2:
 				if (user_count != 0){
-					currently_selected = (currently_selected + user_count - 1) % user_count;
+					currently_selected = (currently_selected + 1) % user_count;
 				}
 				redrawUserTables();
 				break;
