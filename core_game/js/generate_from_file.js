@@ -18,9 +18,6 @@ function onResults(results) {
       drawLandmarks(canvasCtx, landmarks, {color: '#FF0000', lineWidth: 2});
     }
   }
-  if (user_results.length == 0){
-    startTime = Date.now();
-  }
   delete results.image;
   results.time = Date.now() - startTime;
   user_results.push(results);
@@ -70,6 +67,10 @@ function linkEnteredKeyPressHandler(event){
 videoElementOfDemo.onloadeddata = (evt) => {
   user_results.length = 0; //clears the array
   videoElementOfDemo.addEventListener('ended', generateFileDownloadLink, false);
+  videoElementOfDemo.onplaying = function() {
+    console.log('Video is now loaded and playing');
+    startTime = Date.now();
+  }
   videoElementOfDemo.play();
   onFrame();
 }

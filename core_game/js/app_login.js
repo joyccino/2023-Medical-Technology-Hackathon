@@ -130,17 +130,16 @@ function onResults(results) {
 	}
 	let res = -1;
 
-	
-
+	function move(width) {
+		const elem = document.getElementById("myBar");
+		elem.style.width = width + "%";
+	}
+	const countTargets = [50, 25, 25];
 	if (results.multiHandLandmarks.length > 0) {
 
-		let gesture = gestureAnalysis(results.multiHandLandmarks[0]);
+		res = gestureAnalysis(results.multiHandLandmarks[0]);
 
-		function move(width) {
-			const elem = document.getElementById("myBar");
-			elem.style.width = width + "%";
-		}
-
+		/*
 		if (gesture == 0) {
 			okCount++;
 			upCount = 0;
@@ -200,7 +199,8 @@ function onResults(results) {
 			move(Math.round((downCount / 25) * 100));
 
 		}
-	  };
+		*/
+	};
 	canvasCtx.restore();
 	//count the things
 	if (res != action){
@@ -209,8 +209,10 @@ function onResults(results) {
 	} else if (res >= 0) {
 		count += 1;
 	}
+
+	move(action >= 0 ? (count * 100 / countTargets[action]) : 0);
 	//activate
-	if (count >= 10){
+	if (action >= 0 && count >= countTargets[action]){
 		count = 0;
 		switch (res){
 			case 0: //ok
