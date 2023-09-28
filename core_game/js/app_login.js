@@ -226,13 +226,15 @@ function onResults(results) {
 				if (user_count != 0){
 					currently_selected = (currently_selected + user_count - 1) % user_count;
 				}
-				redrawUserTables();
+				//redrawUserTables();
+				highlightSelected();
 				break; 
 			case 2:
 				if (user_count != 0){
 					currently_selected = (currently_selected + 1) % user_count;
 				}
-				redrawUserTables();
+				//redrawUserTables();
+				highlightSelected();
 				break;
 
 		}
