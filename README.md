@@ -20,5 +20,3 @@ We are committed to further developing and expanding NeuroDance to reach senior 
 # Acknowledgments
 
 This achievement wouldn't have been possible without the unwavering dedication of our exceptional team members: Joy Soobeen Moon, Ruize Geng, Tanisha Ahuja and Alice Yoonjung Woo. Each member brought unique skills and a shared passion for creating a brighter future for our seniors. 🙌
-
-We extend our heartfelt gratitude to everyone who supported us throughout this journey, with special thanks to our mentors, Polina Nesterova, and our esteemed judges, Suneeta Mall, Chris Chiu, and Ben Hachey. Together, we are shaping a brighter future for healthcare. Stay tuned for updates on our remarkable journey! 🌟
