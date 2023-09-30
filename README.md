@@ -1,5 +1,5 @@
 # MEDIVATE Healthcare AI Hackathon 2023 First-Place Victory 🏆 <br>
-# The University of Sydney Medivate 헬스케어 AI 해커톤 2023 년 1등 수상작
+### The University of Sydney Medivate 헬스케어 AI 해커톤 2023 년 1등 수상작
 
 https://github.com/joyccino/2023-Medical-Technology-Hackathon/assets/67300266/ff471c40-77c2-4f98-8920-1af5696e7da6
 
