@@ -3,7 +3,7 @@
 
 https://github.com/joyccino/2023-Medical-Technology-Hackathon/assets/67300266/ff471c40-77c2-4f98-8920-1af5696e7da6
 
-We are excited to announce that our team clinched the top spot at the MEDIVATE Healthcare Hackathon 2023 with our groundbreaking project designed to promote physical activity among senior citizens.
+We are excited to announce that our team clinched the top spot at the MEDIVATE Healthcare Hackathon 2023 with our project designed to promote physical activity among senior citizens.
 
 # Project Overview
 
